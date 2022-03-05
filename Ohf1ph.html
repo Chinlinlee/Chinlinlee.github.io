@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>HAPI-FHIR Database (一) ⇒ Database結構&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="HAPI-FHIR Database (一) ⇒ Database結構">
+  
+    <meta name="description" content="一點都不HAPI">
+    <meta property="og:description" content="一點都不HAPI">
+  
+  
+    <meta property="og:image" content="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;💻&lt;/text&gt;&lt;/svg&gt;">
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;😀&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+          
+          <span>About</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;💻&lt;/text&gt;&lt;/svg&gt;"></span>
+      </div>
+    
+    <h1 class="Header__Title">HAPI-FHIR Database (一) ⇒ Database結構</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Mon, Jan 17, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--brown">
+            <a href="tag/HAPI-FHIR.html">HAPI-FHIR</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/FHIR.html">FHIR</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--pink">
+            <a href="tag/SQL.html">SQL</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/9f8018ea7e754827a6f923357255a62c" class="PageRoot"><div id="https://www.notion.so/0bd6568cb47240a5b2c6a1f35b245d09" class="ColorfulBlock ColorfulBlock--BgGray Callout"><div class="Callout__Icon"><div class="Icon">⚠️</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">注意此篇只研究</span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Postgres</strong></mark></span><span class="SemanticString">，且只跟轉資料有關</span></span></p></div><div id="https://www.notion.so/fef364f7cc334011a65ed862a98499e1" class="ColorfulBlock ColorfulBlock--BgGray Callout"><div class="Callout__Icon"><div class="Icon">❔</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">由於出現了必須從HAPI-FHIR轉到另一個FHIR Server，且是完全不相同的結構。
+小弟認為直接讀取HAPI-FHIR的Database應該會比FHIR WEB API還來得快，所以研究了一下HAPI-FHIR轉置資料所需要使用到的Data Tables。</span></span></p></div><h1 id="https://www.notion.so/8293ee8c79724c999e87b7f86ac15371" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/8293ee8c79724c999e87b7f86ac15371"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HFJ_RESOURCE: Resource Master Table</strong></span></span></h1><div id="https://www.notion.so/cb4ed897bec94b8ea8923d94d353e218" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">記錄</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">create</strong></span><span class="SemanticString">、</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">update</strong></span><span class="SemanticString">所有Resource相關資料，ID、version、resourceType等。</span></span></p></div><div id="https://www.notion.so/d0aee09022804cbd8b69dd5552470e26" class="CollectionInline"><h3><a class="Anchor" href="#https://www.notion.so/d0aee09022804cbd8b69dd5552470e26"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HFJ_RESOURCE</strong></strong></span></span></h3><div class="Table"><table><thead><tr><th style="width:276px">Name</th><th style="width:200px">DataType</th><th>Description</th></tr></thead><tbody><tr><td class="Table__CellTitle"><a href="https://www.notion.so/a1b65ab3ae05411ab5d10756cc63f1fb"><span class="SemanticStringArray"><span class="SemanticString">res_ver</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">Long</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">資料當前版本號，</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">每次PUT時，此筆資料同步更新版本號</strong></span></span></td></tr><tr><td class="Table__CellTitle"><a href="https://www.notion.so/bd318b1396974498b9bc50616fac6e9f"><span class="SemanticStringArray"><span class="SemanticString">res_id</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">bigint</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">此資料在資料庫的唯一id</span></span></td></tr><tr><td class="Table__CellTitle"><a href="https://www.notion.so/e9926b01e6e042e68e1bcdb39caf8438"><span class="SemanticStringArray"><span class="SemanticString">res_type</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">String</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">resource type.(e.g. </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Patient</code></span><span class="SemanticString">
+)</span></span></td></tr></tbody></table></div></div><div id="https://www.notion.so/a4600fbe406d452888ed13bd1f9ee79d" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">此資料表用來做以下事情：</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/bfb90fc904124b259cb8c1496332ca77" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">取得在FHIR Server所有的資料數量</span></span></li><li id="https://www.notion.so/def91134285043f59941593e77acdb18" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">確認每筆資料的version</span></span></li></ul><h1 id="https://www.notion.so/9ca25234beaf4d72b22be233e144dc2e" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/9ca25234beaf4d72b22be233e144dc2e"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HFJ_RES_VER: Resource Versions and Contents</strong></strong></span></span></h1><div id="https://www.notion.so/4636086cfabe4a68b61057c0f416377e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">記錄每一個version的資料，包含FHIR Resource JSON，</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">此資料表為轉置資料最主要的資料表</strong></span><span class="SemanticString">。</span></span></p></div><div id="https://www.notion.so/e9f73fb87ac4491da0785b9cfdf8aa7a" class="CollectionInline"><h3><a class="Anchor" href="#https://www.notion.so/e9f73fb87ac4491da0785b9cfdf8aa7a"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HFJ_RES_VER</strong></strong></span></span></h3><div class="Table"><table><thead><tr><th style="width:276px">Name</th><th style="width:200px">DataType</th><th>Description</th></tr></thead><tbody><tr><td class="Table__CellTitle"><a href="https://www.notion.so/b7d12183aa524f6a85bdb540771e42ce"><span class="SemanticStringArray"><span class="SemanticString">res_ver</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">Long</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">資料當前版本號，</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">每次PUT時，都會新增一筆資料到此資料表</strong></span></span></td></tr><tr><td class="Table__CellTitle"><a href="https://www.notion.so/076440141eeb4d0dbb26d86433773385"><span class="SemanticStringArray"><span class="SemanticString">res_id</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">bigint</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">此資料在資料庫的唯一id</span></span></td></tr><tr><td class="Table__CellTitle"><a href="https://www.notion.so/aab948a20186400e8ef2dd89115b5e2f"><span class="SemanticStringArray"><span class="SemanticString">res_type</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">String</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">resource type.(e.g. </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Patient</code></span><span class="SemanticString">
+)</span></span></td></tr><tr><td class="Table__CellTitle"><a href="https://www.notion.so/6eca44d7ce07432991281fd45637eb98"><span class="SemanticStringArray"><span class="SemanticString">res_text</span></span></a></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">byte[] (SQL LOB)</span></span></td><td class="Table__CellText"><span class="SemanticStringArray"><span class="SemanticString">FHIR Resource資料，使用byte儲存</span></span></td></tr></tbody></table></div></div><div id="https://www.notion.so/f1b2254137674404b3f3b3be102d5492" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">此資料表用來做以下事情：</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/684f0a73e1f2473ba14ee450118237fe" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">取得Resource的JSON資料</span></span></li></ul><div id="https://www.notion.so/a796fea7b8dd410c95b1d7700347e1d5" class="ColorfulBlock ColorfulBlock--BgGray Callout"><div class="Callout__Icon"><div class="Icon">➡️</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">下一篇將實作轉置資料的方法</span></span></p></div><h1 id="https://www.notion.so/a0c04910ef0e4b56bd3611e05c2e3208" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/a0c04910ef0e4b56bd3611e05c2e3208"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">參考資料</strong></strong></span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/7e16c68b222945f59ab575e9c833ac75" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"> </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://hapifhir.io/hapi-fhir/docs/server_jpa/schema.html">HAPI FHIR JPA Schema</a></span></span></li></ul></article>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2022</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
