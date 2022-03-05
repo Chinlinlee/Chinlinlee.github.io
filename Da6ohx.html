@@ -1,1 +1,238 @@
-The template name has zero length, please check the "template" field in your Notion table.
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>FHIR 快速入門組出第一個Patient Resource JSON&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="FHIR 快速入門組出第一個Patient Resource JSON">
+  
+    <meta name="description" content="FHIR 快速入門？真假？">
+    <meta property="og:description" content="FHIR 快速入門？真假？">
+  
+  
+    <meta property="og:image" content="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🔥&lt;/text&gt;&lt;/svg&gt;">
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;😀&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+          
+          <span>About</span>
+        </div>
+      </a>
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+      <div class="Header__Icon">
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🔥&lt;/text&gt;&lt;/svg&gt;"></span>
+      </div>
+    
+    <h1 class="Header__Title">FHIR 快速入門組出第一個Patient Resource JSON</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jan 27, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--red">
+            <a href="tag/FHIR.html">FHIR</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/297fe2484352469d918217e8b53a17d4" class="PageRoot"><div id="https://www.notion.so/a702c570b52b47319ad5ec88db6bd2e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">此篇將帶大家了解基本的FHIR Resource content、Data Types並組出第一個Patient JSON。</span></span></p></div><h1 id="https://www.notion.so/2fa1fe3e3548409284f0efa8201f0852" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/2fa1fe3e3548409284f0efa8201f0852"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">必備知識</strong></span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/9c7dc61fde0c4af0831840e9c8919fb0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">JSON</span></span></li></ul><h1 id="https://www.notion.so/8ed80f6731fe4486aa38c080f3fe3dbf" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/8ed80f6731fe4486aa38c080f3fe3dbf"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">FHIR Data Types</strong></strong></span></span></h1><div id="https://www.notion.so/cbe814d4b3bc45cc95c1002f1c902214" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F46eb2e18-e8e9-4a87-afed-1042821713c6%2FUntitled.png?width=1057&amp;table=block&amp;id=cbe814d4-b3bc-45cc-95c1-002f1c902214"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F46eb2e18-e8e9-4a87-afed-1042821713c6%2FUntitled.png?width=1057&amp;table=block&amp;id=cbe814d4-b3bc-45cc-95c1-002f1c902214" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/8066524b67b0412888ada4f165b50ec8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Primite Types 是最基本的(</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">而且只有 Primive Type 是首字小寫</strong></span><span class="SemanticString">)，以程式來看就是常見的string、int、float這種型態</span></span></li><li id="https://www.notion.so/09151d68bcbd40a0aaaa0ce3a0830fa8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">其餘Types，都是以所有Types複合組成的Type，以程式來看就像是Class、Interface、Object</span></span></li></ul><h1 id="https://www.notion.so/13565fc815da4576ba99d2a1f5ee94f1" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/13565fc815da4576ba99d2a1f5ee94f1"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">FHIR Resource Content</strong></span></span></h1><div id="https://www.notion.so/942c2957078547bda36f64093c6c858b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下是Resource Content的小小說明</span></span></p></div><div id="https://www.notion.so/d379e40715b14cef84d2fb2a22ce731d" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F20e4225b-bd1c-4860-815a-f9d5b561fae5%2FUntitled.png?width=1069&amp;table=block&amp;id=d379e407-15b1-4cef-84d2-fb2a22ce731d"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F20e4225b-bd1c-4860-815a-f9d5b561fae5%2FUntitled.png?width=1069&amp;table=block&amp;id=d379e407-15b1-4cef-84d2-fb2a22ce731d" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><blockquote id="https://www.notion.so/b1a25fb7a0c94e70b93ae0d595a5422b" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">Note: </em></span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">欄位名稱</strong></em></code></span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">、</em></span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">數量</strong></em></code></span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic">、</em></span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">資料型態</strong></em></code></span><span class="SemanticString"><em class="SemanticString__Fragment SemanticString__Fragment--Italic"> 是組成Resource的關鍵重點。</em></span></span></blockquote><h1 id="https://www.notion.so/8a45b6fab5a6415792b5a4b85c43e58f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/8a45b6fab5a6415792b5a4b85c43e58f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">看文件組JSON的小技巧</strong></span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/88f0b4fedbe54d71a11cf4108e2f889d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">看到Type小寫且Card.(數量)為</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">0…1</strong></span></span></li></ul><div id="https://www.notion.so/6a9403e606e34de0bfc84193b61e3a6b" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0da4c2c7-c7b3-4fa1-84a9-20c7ebb98202%2FUntitled.png?width=397&amp;table=block&amp;id=6a9403e6-06e3-4de0-bfc8-4193b61e3a6b"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F0da4c2c7-c7b3-4fa1-84a9-20c7ebb98202%2FUntitled.png?width=397&amp;table=block&amp;id=6a9403e6-06e3-4de0-bfc8-4193b61e3a6b" style="width:397px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/e4fe64667440467ab89d0daa6622355e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">看到Type小寫且Card.(數量)為</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">0…*</strong></span></span></li></ul><div id="https://www.notion.so/de445520d75b4c1f88292d514dea0d80" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc23c349b-48ab-4974-8bd2-8e69adf27d4e%2FUntitled.png?width=523&amp;table=block&amp;id=de445520-d75b-4c1f-8829-2d514dea0d80"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc23c349b-48ab-4974-8bd2-8e69adf27d4e%2FUntitled.png?width=523&amp;table=block&amp;id=de445520-d75b-4c1f-8829-2d514dea0d80" style="width:523px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/2579a32c4f1441ac8ef8cb9417142f75" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">看到Type大寫且Card.(數量)為</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">0…1</strong></span></span></li></ul><div id="https://www.notion.so/72d7312010e041bab16c1d35761ce37e" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F131addac-cb29-4862-8d05-8212fa59c26f%2FUntitled.png?width=494&amp;table=block&amp;id=72d73120-10e0-41ba-b16c-1d35761ce37e"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F131addac-cb29-4862-8d05-8212fa59c26f%2FUntitled.png?width=494&amp;table=block&amp;id=72d73120-10e0-41ba-b16c-1d35761ce37e" style="width:494px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/4e733f4adbb948e1842d371a2b121b14" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">看到Type大寫且Card.(數量)為</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">0…*</strong></span></span></li></ul><div id="https://www.notion.so/d6b1ab6b45d44194b61509db5e7e8a29" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9ed68166-62f3-4985-badd-0591bec18a93%2FUntitled.png?width=517&amp;table=block&amp;id=d6b1ab6b-45d4-4194-b615-09db5e7e8a29"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F9ed68166-62f3-4985-badd-0591bec18a93%2FUntitled.png?width=517&amp;table=block&amp;id=d6b1ab6b-45d4-4194-b615-09db5e7e8a29" style="width:517px"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><h1 id="https://www.notion.so/55747c6ae6cc47869a7ffd97a417613c" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/55747c6ae6cc47869a7ffd97a417613c"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">組出Patient Resource JSON</strong></span></span></h1><div id="https://www.notion.so/97a27876576e4af5bbae631db0d8dff0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">題目來自: </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://hackmd.io/@lorex8711/rkCXQV7hr#%E6%BC%94%E7%B7%B4-I%EF%BC%9A%E5%BB%BA%E7%AB%8B%E5%96%AE%E7%AD%86-Patient-Resource">演練 I：建立單筆 Patient Resource</a></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/5ba6b204910f436c9daef73891b7632c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">病人英文姓名為「Jennifer Lopez」，中譯姓名為「珍妮佛羅培茲」</span></span></li><li id="https://www.notion.so/a5fbe6765cc54205a1cf4c1a418690ec" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">這是他的照片：</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://i.imgur.com/VeTQheO.png">https://i.imgur.com/VeTQheO.png</a></span></span></li><li id="https://www.notion.so/7fd2c1f6bd83417db27e0fef51263ba9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">護照號碼：65848725</span></span></li><li id="https://www.notion.so/559eb98ae91e4d9f92bd886668eaf857" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">聯絡電話：(宅) 07–2159685 (公) 07–7938888 (手機) 0912–354879</span></span></li><li id="https://www.notion.so/9bd5478ff3884f209469f1f041ab6bb8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">聯絡地址：高雄市橋頭區經武路 58 號 24 樓之 11</span></span></li><li id="https://www.notion.so/57581cff1a2e4748991c7869aaa1f75b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">戶籍地址同聯絡地址</span></span></li><li id="https://www.notion.so/5b83fa7ff8e14917b3b2dca3bc999dc3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">緊急聯絡人姓名：余智波鮭魚</span></span></li><li id="https://www.notion.so/8e0542671bb74f7f8340cbe41d9ae4d4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">緊急聯絡人電話：(手機) 0988–878545</span></span></li><li id="https://www.notion.so/60de8cf5fcfa48cf81f5a7e60df7c4c0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">緊急聯絡人關係：父子</span></span></li><li id="https://www.notion.so/202fcd967c7c4d92baad503d0d268d62" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">病人慣用溝通之語言為英文（en-US）</span></span></li></ul><pre id="https://www.notion.so/927eab33847f410c8d58198d575a2d30" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/*
+病人英文姓名為「Jennifer Lopez」，中譯姓名為「珍妮佛羅培茲」  x
+這是他的照片：https://i.imgur.com/VeTQheO.png x
+護照號碼：65848725   x
+聯絡電話：(宅) 07–2159685 (公) 07–7938888 (手機) 0912–354879  x
+聯絡地址：高雄市橋頭區經武路 58 號 24 樓之 11 x
+戶籍地址同聯絡地址
+緊急聯絡人姓名：余智波鮭魚 x
+緊急聯絡人電話：(手機) 0988–878545 x
+緊急聯絡人關係：父子 
+病人慣用溝通之語言為英文（en-US） x
+*/</span>
+<span class="token keyword">let</span> patient <span class="token operator">=</span>
+<span class="token punctuation">{</span>
+    <span class="token string-property property">"resourceType"</span><span class="token operator">:</span> <span class="token string">"Patient"</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"identifier"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"official"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"type"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token string-property property">"coding"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                    <span class="token punctuation">{</span>
+                        <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"https://www.hl7.org/fhir/v2/0203/index.html"</span><span class="token punctuation">,</span>
+                        <span class="token string-property property">"code"</span><span class="token operator">:</span> <span class="token string">"PPN"</span><span class="token punctuation">,</span>
+                        <span class="token string-property property">"display"</span><span class="token operator">:</span> <span class="token string">"Passport number"</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"passport number"</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"gender"</span><span class="token operator">:</span> <span class="token string">"male"</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"official"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"Jennifer Lopez"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"family"</span><span class="token operator">:</span> <span class="token string">"Lopez"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"given"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"Jennifer"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"usual"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"珍妮佛羅培茲"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"family"</span><span class="token operator">:</span> <span class="token string">"羅培茲"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"given"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                <span class="token string">"珍妮佛"</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"telecom"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"phone"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"home"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token string">"07–2159685"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"phone"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"work"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token string">"07–7938888"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"phone"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"mobile"</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token string">"0912–354879"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"address"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"高雄市橋頭區經武路 58 號 24 樓之 11"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"photo"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"url"</span><span class="token operator">:</span> <span class="token string">"https://i.imgur.com/VeTQheO.png"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"contact"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"relationship"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                <span class="token punctuation">{</span>
+                    <span class="token string-property property">"coding"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token punctuation">{</span>
+                            <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"http://terminology.hl7.org/CodeSystem/v2-0131"</span><span class="token punctuation">,</span>
+                            <span class="token string-property property">"code"</span><span class="token operator">:</span> <span class="token string">"C"</span><span class="token punctuation">,</span>
+                            <span class="token string-property property">"display"</span><span class="token operator">:</span> <span class="token string">"Emergency Contact"</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                    <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"緊急聯絡人"</span>
+                <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token punctuation">{</span>
+                    <span class="token string-property property">"coding"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token punctuation">{</span>
+                            <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"http://terminology.hl7.org/CodeSystem/v2-0131"</span><span class="token punctuation">,</span>
+                            <span class="token string-property property">"code"</span><span class="token operator">:</span> <span class="token string">"N"</span><span class="token punctuation">,</span>
+                            <span class="token string-property property">"display"</span><span class="token operator">:</span> <span class="token string">"Next-of-Kin"</span><span class="token punctuation">,</span>
+                            <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">""</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                    <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"父子"</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">]</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"official"</span><span class="token punctuation">,</span>
+                <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"余智波鮭魚"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"telecom"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                <span class="token punctuation">{</span>
+                    <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"phone"</span><span class="token punctuation">,</span>
+                    <span class="token string-property property">"use"</span><span class="token operator">:</span> <span class="token string">"mobile"</span><span class="token punctuation">,</span>
+                    <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token string">"0988–878545"</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-property property">"communication"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+            <span class="token string-property property">"language"</span> <span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token string-property property">"coding"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                    <span class="token punctuation">{</span>
+                        <span class="token string-property property">"system"</span><span class="token operator">:</span> <span class="token string">"urn:ietf:bcp:47"</span><span class="token punctuation">,</span>
+                        <span class="token string-property property">"code"</span><span class="token operator">:</span> <span class="token string">"en-US"</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">]</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string-property property">"preferred"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h1 id="https://www.notion.so/2d0258473c7746d3b43860a930634347" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/2d0258473c7746d3b43860a930634347"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">參考資料</strong></span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/bdaf8dc9280a4b00a2acbf1dbf6d02c1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.hl7.org/fhir/datatypes.html">FHIR Data Types</a></span></span></li><li id="https://www.notion.so/a3a5a4d2733d41a4813940e1d8d1119e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.hl7.org/fhir/patient.html">FHIR Patient Resource</a></span></span></li><li id="https://www.notion.so/37babd0d159b4c3b941bd4d58ed75ffc" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.slideshare.net/lorexyang/fhir-201786643">陽明大學 / FHIR快速跳坑指南</a></span></span></li><li id="https://www.notion.so/8e99185e1ad340ca8b41a440470001d9" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://hackmd.io/@lorex8711/rkCXQV7hr">FHIR 開發教育訓練相關資源</a></span></span></li></ul></article>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2022</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
