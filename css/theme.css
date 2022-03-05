@@ -190,6 +190,16 @@ pre.Code code {
   tab-size: 2;
 }
 
+pre.Code button.code-copy-btn {
+  margin-top: -26px;
+  margin-right: -16px;
+  position: relative;
+  float: right;
+  background-color: var(--color-bg-gray);
+  border: 0;
+  cursor: pointer;
+}
+
 .Code.Code--NoWrap .SemanticString {
   white-space: pre;
 }
@@ -1158,4 +1168,27 @@ pre.Code code {
   padding: 6px 2px;
   color: var(--color-text-default-light);
   font-size: 0.875em;
+}
+
+/* toast */
+.toast-bottom {
+  position: fixed; 
+  bottom: 24px; 
+  left: 0px; 
+  width: 100%; 
+  display: flex; 
+  opacity: 0.7; 
+  transform: scale(0.960743);
+}
+
+.toast-bottom-content {
+  background: rgb(15, 15, 15); 
+  color: rgba(255, 255, 255, 0.9); 
+  border-radius: 3px; 
+  padding: 6px 12px; 
+  box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 5px 10px, rgba(15, 15, 15, 0.2) 0px 15px 40px; 
+  margin: 0px auto; 
+  font-size: 14px; 
+  display: flex; 
+  align-items: center;
 }
