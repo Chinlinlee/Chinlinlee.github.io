@@ -78,6 +78,8 @@
       </a>
     
   
+    
+  
 </nav>
   <header class="Header">
     
@@ -133,3 +135,12 @@
 
 </html>
 <script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>
