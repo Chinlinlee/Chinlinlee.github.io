@@ -176,8 +176,7 @@ pre.Code {
   border-radius: 5px;
   background-color: rgb(247, 246, 243);
   margin: 10px 0;
-  padding: 26px 16px;
-  overflow: auto;
+  padding: 16px 16px 5px;
 }
 
 pre.Code code {
@@ -188,10 +187,12 @@ pre.Code code {
   padding: 0;
   word-wrap: break-word;
   tab-size: 2;
+  overflow: auto;
+  display: block;
 }
 
 pre.Code button.code-copy-btn {
-  margin-top: -26px;
+  margin-top: -16px;
   margin-right: -16px;
   position: relative;
   float: right;
@@ -1191,4 +1192,9 @@ pre.Code button.code-copy-btn {
   font-size: 14px; 
   display: flex; 
   align-items: center;
+}
+/* list of tags in index page */
+#tags-list a {
+  text-decoration: none;
+  color: inherit;
 }
