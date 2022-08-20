@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>DICOM icc profile comparation and verify via GIMP&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="DICOM icc profile comparation and verify via GIMP">
+  
+    <meta name="description" content="小小記錄 DICOM 影像套用 ICC Profile">
+    <meta property="og:description" content="小小記錄 DICOM 影像套用 ICC Profile">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">DICOM icc profile comparation and verify via GIMP</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Fri, Aug 19, 2022</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+            <a href="tag/DICOM.html">DICOM</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/64910cd237fb4c2c921d42a2ea746d1f" class="PageRoot"><h1 id="https://www.notion.so/2032ebbcfd4644b28e7fabb9b8bf2ddb" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/2032ebbcfd4644b28e7fabb9b8bf2ddb"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">簡介</span></span></h1><div id="https://www.notion.so/63e9ac6a92954e6dab6516da71efb497" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">紀錄一下以前 Raccoon 新增 ICC Profiles 功能時所遇到的坑。</span></span></p></div><div id="https://www.notion.so/dde4cee018164f2ca4d8890172ecc121" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">因 Raccoon 是使用 Node.js 編寫的，所以當時找了處理影像的套件 sharp 套用 ICC Profile，結果發現套用後，與其他 PACS 的顏色不同，並且還發生了一點小插曲！？</span></span></p></div><div id="https://www.notion.so/1bdb2be765db44baac49ec2f94dd6515" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下將使用一些工具展示套用 ICC Profile 的結果。</span></span></p></div><h1 id="https://www.notion.so/87ecf86abbc44131b6b50b15498a7192" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/87ecf86abbc44131b6b50b15498a7192"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">方法</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/be303066c88747ecaff3962a88b6a622" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">採用 dcm4che 所提供的 ICC Profiles: </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/dcm4che/dcm4che/tree/master/dcm4che-image/src/main/resources/org/dcm4che3/image">Github</a></span></span></li></ul><blockquote id="https://www.notion.so/f8815889243c46a293306dc8a03dec46" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString"> 使用影像內建的 ICC Profile 測試</span></span><a id="https://www.notion.so/e30ece1c1d9f4b759f6815bde3cb5a2c" class="File" href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F35891377-aebf-41df-b48c-f4b4c068b432%2Fimage.raw.icc?table=block&amp;id=e30ece1c-1d9f-4b75-9f68-15bde3cb5a2c"><div><div class="File__Icon"><svg viewBox="0 0 30 30" style="width:1.35em;height:1.35em;fill:inherit"><g><path d="M22,8v12c0,3.866-3.134,7-7,7s-7-3.134-7-7V8c0-2.762,2.238-5,5-5s5,2.238,5,5v12c0,1.657-1.343,3-3,3s-3-1.343-3-3V8h-2v12c0,2.762,2.238,5,5,5s5-2.238,5-5V8c0-3.866-3.134-7-7-7S6,4.134,6,8v12c0,4.971,4.029,9,9,9s9-4.029,9-9V8H22z"></path></g></svg></div><div><span class="File__Title">image.raw.icc</span><span class="File__Size">1769.0KB</span></div></div></a></blockquote><ul class="BulletedListWrapper"><li id="https://www.notion.so/5932be8fb10d42bbb55df9b651934184" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">使用 dcm4che dcm2jpg, nodejs sharp, imagemagick 對影像套用 ICC Profile</span></span></li><li id="https://www.notion.so/187d39ba5c4e454a8fa8f3c7fbe5e5c3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">使用 GIMP </span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedBg SemanticString__Fragment--BgRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">主觀</strong></mark></span><span class="SemanticString">驗證兩者轉出來的顏色</span></span></li><li id="https://www.notion.so/1508ecd4e5f747fb984041833b4e37d3" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">使用檔案: </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="ftp://medical.nema.org/medical/dicom/Datasets/WG26/WG26Demo2020_PV/Diagnostics%5ERoche%5ETissue%20%5B0010%5D/20200731%20104639%20%5BSteiner%2040x%20z1%20Q%5D/Series%20001%20%5BSM%5D/">ftp://medical.nema.org/medical/dicom/Datasets/WG26/WG26Demo2020_PV/Diagnostics^Roche^Tissue [0010]/20200731 104639 [Steiner 40x z1 Q]/Series 001 [SM]/</a></span><span class="SemanticString">2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.dcm</span></span></li></ul><blockquote id="https://www.notion.so/2e540e11d99d40a3960aad9d018bc4df" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString"> 使用第 78 張 Frame</span></span></blockquote><ul class="BulletedListWrapper"><li id="https://www.notion.so/e5e0d5a206f7467bbd85c8e7e7a8d158" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">EXIftool</span></span></li></ul><pre id="https://www.notion.so/6e626a8ec30143b597f28fac2e955739" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ExifTool Version Number         : 12.44
+File Name                       : 2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.jpg
+Directory                       : I:/Blog/icc-profile/code
+File Size                       : 207 kB
+File Modification Date/Time     : 2022:08:18 22:40:14+08:00
+File Access Date/Time           : 2022:08:19 12:42:51+08:00
+File Creation Date/Time         : 2022:08:18 22:42:09+08:00
+File Permissions                : -rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.02
+Resolution Unit                 : None
+X Resolution                    : 1
+Y Resolution                    : 1
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 1024x1024
+Megapixels                      : 1.0</span></span></span></code></pre><h2 id="https://www.notion.so/d2c5e4873328460e85ac5a5eadfaaa21" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/d2c5e4873328460e85ac5a5eadfaaa21"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">GIMP 套用 ICC Profile</span></span></h2><h3 id="https://www.notion.so/5087702390af4ba5b9441bb41032026c" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/5087702390af4ba5b9441bb41032026c"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">步驟</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/e157515dbf854be8ba774cfde7dbe6a0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">點擊 影像 → 色彩管理(N) → 指定色彩描述檔</span></span></li></ul><h3 id="https://www.notion.so/e545268fc26f4e35a46dd8a14414a9cd" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/e545268fc26f4e35a46dd8a14414a9cd"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">結果</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/456e113eb50646a5bb9ff9912f88edce" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">影像</span></span></li></ul><div id="https://www.notion.so/9ec0c580b1e141cda88390f715c349b1" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc41af20b-89b1-4c90-a3e1-2699ff31e9c6%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-GIMP.jpg?width=1024&amp;table=block&amp;id=9ec0c580-b1e1-41cd-a883-90f715c349b1"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fc41af20b-89b1-4c90-a3e1-2699ff31e9c6%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-GIMP.jpg?width=1024&amp;table=block&amp;id=9ec0c580-b1e1-41cd-a883-90f715c349b1" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">GIMP apply ICC Profile</span></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/71c8d207c9fc4e859075f12ff8c201fc" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">EXIF Info</span></span></li></ul><pre id="https://www.notion.so/da56913a15d242f88d3ad640e51e504a" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ExifTool Version Number         : 12.44
+File Name                       : 2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-GIMP.jpg
+Directory                       : I:/Blog/icc-profile/code
+File Size                       : 2.0 MB
+File Modification Date/Time     : 2022:08:19 13:41:10+08:00
+File Access Date/Time           : 2022:08:19 14:06:18+08:00
+File Creation Date/Time         : 2022:08:19 13:41:10+08:00
+File Permissions                : -rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+Exif Byte Order                 : Little-endian (Intel, II)
+Orientation                     : Horizontal (normal)
+X Resolution                    : 300
+Y Resolution                    : 300
+Resolution Unit                 : inches
+Software                        : GIMP 2.10.32
+Modify Date                     : 2022:08:19 13:40:30
+Subfile Type                    : Reduced-resolution image
+Compression                     : JPEG (old-style)
+Photometric Interpretation      : YCbCr
+Samples Per Pixel               : 3
+Thumbnail Offset                : 286
+Thumbnail Length                : 19933
+XMP Toolkit                     : XMP Core 4.4.0-Exiv2
+Document ID                     : gimp:docid:gimp:b2934add-b705-4ffb-acb0-a0d04170b392
+Instance ID                     : xmp.iid:b075a0e2-1e02-4764-b587-e2e32511818a
+Original Document ID            : xmp.did:211c4e7e-908a-4479-b011-7931fb1faa0a
+Format                          : image/jpeg
+Api                             : 2.0
+Platform                        : Windows
+Time Stamp                      : 1660887670731023
+Version                         : 2.10.32
+Creator Tool                    : GIMP 2.10
+Metadata Date                   : 2022:08:19T13:40:30+08:00
+History Action                  : saved
+History Changed                 : /
+History Instance ID             : xmp.iid:45d5e005-74f1-4e23-8db1-9fe8c733a00a
+History Software Agent          : Gimp 2.10 (Windows)
+History When                    : 2022:08:19 13:41:10
+Profile CMM Type                : Adobe Systems Inc.
+Profile Version                 : 4.3.0
+Profile Class                   : Input Device Profile
+Color Space Data                : RGB
+Profile Connection Space        : Lab
+Profile Date Time               : 2017:11:08 10:54:51
+Profile File Signature          : acsp
+Primary Platform                : Microsoft Corporation
+CMM Flags                       : Not Embedded, Independent
+Device Manufacturer             : Unknown (    )
+Device Model                    : 
+Device Attributes               : Transparency, Glossy, Positive, Color
+Rendering Intent                : Media-Relative Colorimetric
+Connection Space Illuminant     : 0.9642 1 0.82491
+Profile Creator                 : Unknown (    )
+Profile ID                      : eb312bfb398ba400bbab5bb1b050428b
+Profile Description (en-GB)     : DP 200 : 1234567890 : 0987654321 : 1
+Profile Copyright (en-GB)       : FFEI Ltd
+Media White Point               : 0.9642 1 0.82489
+Chromatic Adaptation            : 1.00003 2e-005 -5e-005 2e-005 1 -2e-005 -2e-005 2e-005 0.99971
+A To B0                         : (Binary data 1811028 bytes, use -b option to extract)
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Progressive DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 1024x1024
+Megapixels                      : 1.0
+Thumbnail Image                 : (Binary data 19933 bytes, use -b option to extract)</span></span></span></code></pre><div id="https://www.notion.so/b988fba5f95440c5b2860b2a2fc01a2c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h2 id="https://www.notion.so/0616bfa7f39343f19a7bab316a0fcc21" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/0616bfa7f39343f19a7bab316a0fcc21"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">dcm4che dcm2jpg 套用 ICC Profile</span></span></h2><h3 id="https://www.notion.so/6f693ad908984cf0922fa18f39945781" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/6f693ad908984cf0922fa18f39945781"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">指令</span></span></h3><pre id="https://www.notion.so/e8d143f954f74deba4f24cb417ace838" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>dcm2jpg input.dcm --iccprofile yes --frame 78 output.jpg</span></span></span></code></pre><h3 id="https://www.notion.so/28646351f11247408a48cd82eda2b9f5" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/28646351f11247408a48cd82eda2b9f5"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">結果</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/930939d4655c483b84482f1c7cf14e15" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">影像</span></span><div id="https://www.notion.so/e9d4084b6fbc4413982edb5423378bde" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F17c2da8c-d22c-4370-b41f-548618f775f4%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.-dcm4che.jpg?width=1024&amp;table=block&amp;id=e9d4084b-6fbc-4413-982e-db5423378bde"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F17c2da8c-d22c-4370-b41f-548618f775f4%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.-dcm4che.jpg?width=1024&amp;table=block&amp;id=e9d4084b-6fbc-4413-982e-db5423378bde" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">dcm4che apply ICC Profile</span></span></figcaption></figure></div></li><li id="https://www.notion.so/72a296cb0558430cb10ed4bdd06a6f68" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">EXIF Info</span></span></li></ul><pre id="https://www.notion.so/8522929a8f8f49809495c36ad8e3c1ef" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ExifTool Version Number         : 12.44
+File Name                       : 2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.-dcm4che.jpg
+Directory                       : I:/Blog/icc-profile/code
+File Size                       : 2.0 MB
+File Modification Date/Time     : 2022:08:19 14:06:09+08:00
+File Access Date/Time           : 2022:08:19 14:09:59+08:00
+File Creation Date/Time         : 2022:08:19 14:08:58+08:00
+File Permissions                : -rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.02
+Resolution Unit                 : None
+X Resolution                    : 1
+Y Resolution                    : 1
+Profile CMM Type                : Little CMS
+Profile Version                 : 4.3.0
+Profile Class                   : Input Device Profile
+Color Space Data                : RGB
+Profile Connection Space        : Lab
+Profile Date Time               : 2017:11:08 10:54:51
+Profile File Signature          : acsp
+Primary Platform                : Microsoft Corporation
+CMM Flags                       : Not Embedded, Independent
+Device Manufacturer             : Unknown (    )
+Device Model                    : 
+Device Attributes               : Transparency, Glossy, Positive, Color
+Rendering Intent                : Media-Relative Colorimetric
+Connection Space Illuminant     : 0.9642 1 0.82491
+Profile Creator                 : Little CMS
+Profile ID                      : eb312bfb398ba400bbab5bb1b050428b
+Profile Description (en-GB)     : DP 200 : 1234567890 : 0987654321 : 1
+Profile Copyright (en-GB)       : FFEI Ltd
+Media White Point               : 0.9642 1 0.82489
+Chromatic Adaptation            : 1.00003 2e-005 -5e-005 2e-005 1 -2e-005 -2e-005 2e-005 0.99971
+A To B0                         : (Binary data 1811028 bytes, use -b option to extract)
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 1024x1024
+Megapixels                      : 1.0</span></span></span></code></pre><div id="https://www.notion.so/aed5c6fa080e446a805980734c29123a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h2 id="https://www.notion.so/7db06f46d9e347fe922fc5e64c394957" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/7db06f46d9e347fe922fc5e64c394957"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">nodejs sharp 套用 ICC Profile</span></span></h2><div id="https://www.notion.so/d9ca96b6dea44cbba0c3df1ab3e87a4d" class="ColorfulBlock ColorfulBlock--BgRed Callout"><div class="Callout__Icon"><div class="Icon">🚫</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">這邊只是稍微紀錄，sharp 在套用影像內建的 ICC Profile 時跳出 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Error: icc_transform: no output profile</code></span><span class="SemanticString"> 的錯誤</span></span></p></div><h3 id="https://www.notion.so/237a5ae74b2943f6b8ec41439d72e1c7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/237a5ae74b2943f6b8ec41439d72e1c7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">使用的程式碼</span></span></h3><pre id="https://www.notion.so/312699025fa94aa4b646e05d80430cf3" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">const</span> sharp <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"sharp"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">(</span><span class="token keyword">async</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">await</span> <span class="token function">sharp</span><span class="token punctuation">(</span><span class="token string">"2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.jpg"</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">toColorspace</span><span class="token punctuation">(</span><span class="token string">"srgb"</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">withMetadata</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            <span class="token literal-property property">icc</span><span class="token operator">:</span> <span class="token string">"./sRGB.icc"</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">toFile</span><span class="token punctuation">(</span><span class="token string">"2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-sharp.jpg"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre><h3 id="https://www.notion.so/3018b5999e454f98a51a0c9b42387019" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/3018b5999e454f98a51a0c9b42387019"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">結果</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/c1ac6c5b2b124edd90231ac5df570b04" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">影像:</span></span></li></ul><div id="https://www.notion.so/73b8beef07eb4afa9146d1673912bd29" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fccc8a2db-40aa-4820-a1ec-ba18018c39f5%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-sharp.jpg?width=1024&amp;table=block&amp;id=73b8beef-07eb-4afa-9146-d1673912bd29"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fccc8a2db-40aa-4820-a1ec-ba18018c39f5%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-sharp.jpg?width=1024&amp;table=block&amp;id=73b8beef-07eb-4afa-9146-d1673912bd29" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">node.js sharp apply ICC profile</span></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/ad233e86cd5946beb3d5e9fb88ec0e70" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">exif info</span></span></li></ul><pre id="https://www.notion.so/e0fe2522e3864d84acdd6e9b561a2d60" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ExifTool Version Number         : 12.44
+File Name                       : 2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-sharp.jpg
+Directory                       : I:/Blog/icc-profile/code
+File Size                       : 222 kB
+File Modification Date/Time     : 2022:08:18 22:44:48+08:00
+File Access Date/Time           : 2022:08:19 13:27:54+08:00
+File Creation Date/Time         : 2022:08:18 22:44:48+08:00
+File Permissions                : -rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Little-endian (Intel, II)
+Orientation                     : Horizontal (normal)
+X Resolution                    : 72
+Y Resolution                    : 72
+Resolution Unit                 : inches
+Y Cb Cr Positioning             : Centered
+Exif Version                    : 0210
+Components Configuration        : Y, Cb, Cr, -
+Flashpix Version                : 0100
+Color Space                     : Uncalibrated
+Exif Image Width                : 1024
+Exif Image Height               : 1024
+Profile CMM Type                : Little CMS
+Profile Version                 : 2.3.0
+Profile Class                   : Input Device Profile
+Color Space Data                : RGB
+Profile Connection Space        : XYZ
+Profile Date Time               : 2006:12:28 18:07:22
+Profile File Signature          : acsp
+Primary Platform                : Microsoft Corporation
+CMM Flags                       : Not Embedded, Independent
+Device Manufacturer             : Little CMS
+Device Model                    : 
+Device Attributes               : Reflective, Glossy, Positive, Color
+Rendering Intent                : Perceptual
+Connection Space Illuminant     : 0.9642 1 0.82491
+Profile Creator                 : Little CMS
+Profile ID                      : 0
+Device Mfg Desc                 : (lcms internal)
+Profile Description             : sRGB built-in
+Device Model Desc               : sRGB built-in
+Media White Point               : 0.95015 1 1.08826
+Red Matrix Column               : 0.43585 0.22238 0.01392
+Blue Matrix Column              : 0.14302 0.06059 0.71384
+Green Matrix Column             : 0.38533 0.71704 0.09714
+Red Tone Reproduction Curve     : (Binary data 2060 bytes, use -b option to extract)
+Green Tone Reproduction Curve   : (Binary data 2060 bytes, use -b option to extract)
+Blue Tone Reproduction Curve    : (Binary data 2060 bytes, use -b option to extract)
+Chromaticity Channels           : 3
+Chromaticity Colorant           : Unknown (0)
+Chromaticity Channel 1          : 0.64 0.33
+Chromaticity Channel 2          : 0.3 0.60001
+Chromaticity Channel 3          : 0.14999 0.06
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 1024x1024
+Megapixels                      : 1.0</span></span></span></code></pre><blockquote id="https://www.notion.so/2837d7fc0b0b403fabe7b0d0c7ca2779" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">可以發現比原本的內容多了一些</span></span></blockquote><h2 id="https://www.notion.so/4c3c21919b344773a28fe5586d6ddab3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/4c3c21919b344773a28fe5586d6ddab3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">imagemagick 套用 ICC Profile</span></span></h2><h3 id="https://www.notion.so/5d9fc5e882844bdc901578b7a9926021" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/5d9fc5e882844bdc901578b7a9926021"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">指令</span></span></h3><pre id="https://www.notion.so/a61933ae69e3432b86196544844e30f4" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>magick input.jpg -profile &quot;image.raw.icc&quot; output.jpg </span></span></span></code></pre><h3 id="https://www.notion.so/e9b3d0b564a343bf8cd9e6f197b81abb" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/e9b3d0b564a343bf8cd9e6f197b81abb"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">結果</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/bda59c3a5c704e4c9c66ac405ded455d" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">影像</span></span><div id="https://www.notion.so/7a9daa2d0724431388fbdb300fa32be6" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F77fa5e7b-cb67-4b00-8965-05106db5828d%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-magick.jpg?width=1024&amp;table=block&amp;id=7a9daa2d-0724-4313-88fb-db300fa32be6"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F77fa5e7b-cb67-4b00-8965-05106db5828d%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-magick.jpg?width=1024&amp;table=block&amp;id=7a9daa2d-0724-4313-88fb-db300fa32be6" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">image magick apply icc profile</span></span></figcaption></figure></div></li><li id="https://www.notion.so/cda7a60dbd894693a7e2d990b4ca7e43" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">EXIF info</span></span></li></ul><pre id="https://www.notion.so/b7d8f82b0f13453387bb34c51a31666f" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>ExifTool Version Number         : 12.44
+File Name                       : 2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6-magick.jpg
+Directory                       : I:/Blog/icc-profile/code
+File Size                       : 2.0 MB
+File Modification Date/Time     : 2022:08:19 13:34:37+08:00
+File Access Date/Time           : 2022:08:19 13:36:17+08:00
+File Creation Date/Time         : 2022:08:19 13:06:23+08:00
+File Permissions                : -rw-rw-rw-
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+Resolution Unit                 : None
+X Resolution                    : 1
+Y Resolution                    : 1
+Profile CMM Type                : Adobe Systems Inc.
+Profile Version                 : 4.3.0
+Profile Class                   : Input Device Profile
+Color Space Data                : RGB
+Profile Connection Space        : Lab
+Profile Date Time               : 2017:11:08 10:54:51
+Profile File Signature          : acsp
+Primary Platform                : Microsoft Corporation
+CMM Flags                       : Not Embedded, Independent
+Device Manufacturer             : Unknown (    )
+Device Model                    : 
+Device Attributes               : Transparency, Glossy, Positive, Color
+Rendering Intent                : Media-Relative Colorimetric
+Connection Space Illuminant     : 0.9642 1 0.82491
+Profile Creator                 : Unknown (    )
+Profile ID                      : eb312bfb398ba400bbab5bb1b050428b
+Profile Description (en-GB)     : DP 200 : 1234567890 : 0987654321 : 1
+Profile Copyright (en-GB)       : FFEI Ltd
+Media White Point               : 0.9642 1 0.82489
+Chromatic Adaptation            : 1.00003 2e-005 -5e-005 2e-005 1 -2e-005 -2e-005 2e-005 0.99971
+A To B0                         : (Binary data 1811028 bytes, use -b option to extract)
+Image Width                     : 1024
+Image Height                    : 1024
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:0 (2 2)
+Image Size                      : 1024x1024
+Megapixels                      : 1.0</span></span></span></code></pre><h1 id="https://www.notion.so/fef24cf587b64192857c1332b00ae003" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/fef24cf587b64192857c1332b00ae003"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">小記錄</span></span></h1><h2 id="https://www.notion.so/cc640eb335764b05a7234c5d952f6e27" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/cc640eb335764b05a7234c5d952f6e27"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">dcm4che 預設轉圖顏色不一致</span></span></h2><div id="https://www.notion.so/bc233ff01c23411c83771151b7777198" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">如果您使用了以下預設的指令將圖轉出來</span></span></p></div><pre id="https://www.notion.so/f4507dd6ae6448c9954ba046a0fc0d8b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>dcm2jpg 2<span class="token punctuation">.</span>16<span class="token punctuation">.</span>840<span class="token punctuation">.</span>1<span class="token punctuation">.</span>113995<span class="token punctuation">.</span>3<span class="token punctuation">.</span>110<span class="token punctuation">.</span>3<span class="token punctuation">.</span>0<span class="token punctuation">.</span>10118<span class="token punctuation">.</span>2000002<span class="token punctuation">.</span>862753<span class="token punctuation">.</span>6<span class="token punctuation">.</span>dcm ^
+2<span class="token punctuation">.</span>16<span class="token punctuation">.</span>840<span class="token punctuation">.</span>1<span class="token punctuation">.</span>113995<span class="token punctuation">.</span>3<span class="token punctuation">.</span>110<span class="token punctuation">.</span>3<span class="token punctuation">.</span>0<span class="token punctuation">.</span>10118<span class="token punctuation">.</span>2000002<span class="token punctuation">.</span>862753<span class="token punctuation">.</span>6<span class="token punctuation">.</span>jpg ^
+<span class="token operator">--</span>frame 78</span></span></span></code></pre><div id="https://www.notion.so/049954978d22472bb825bf398b66368e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">您會發現，轉出來的圖與 weasis 顯示的圖，顏色明顯不同</span></span></p></div><div id="https://www.notion.so/cc118b5495bf42648e67dc8d9edbe378" class="ColumnList"><div id="https://www.notion.so/87c63f50e1c846298066106e5bc8db88" class="Column" style="width:calc((100% - var(--column-spacing) * 1) * 0.5)"><div id="https://www.notion.so/2f416890faf949698ed7c0f10349a92d" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F09256d82-e89e-4294-bd56-60af8bd2e629%2FUntitled.png?width=1172&amp;table=block&amp;id=2f416890-faf9-4969-8ed7-c0f10349a92d"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F09256d82-e89e-4294-bd56-60af8bd2e629%2FUntitled.png?width=1172&amp;table=block&amp;id=2f416890-faf9-4969-8ed7-c0f10349a92d" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">The DICOM view from weasis</span></span></figcaption></figure></div></div><div id="https://www.notion.so/d17740f7ddf244d9b9e72586a7f49512" class="Column" style="width:calc((100% - var(--column-spacing) * 1) * 0.5)"><div id="https://www.notion.so/8685be431ad34b14b545bd6180d83d5e" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fca6832c5-e7b6-4225-b3f3-32226065ba24%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.jpg?width=1024&amp;table=block&amp;id=8685be43-1ad3-4b14-b545-bd6180d83d5e"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fca6832c5-e7b6-4225-b3f3-32226065ba24%2F2.16.840.1.113995.3.110.3.0.10118.2000002.862753.6.jpg?width=1024&amp;table=block&amp;id=8685be43-1ad3-4b14-b545-bd6180d83d5e" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">The image convert by command above</span></span></figcaption></figure></div></div></div><div id="https://www.notion.so/26f19f60fee647c6885ddbd49110cb79" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">此時加入 ICC Profile: No 就會與使用 weasis 觀看到的影像顏色相同</span></span></p></div><pre id="https://www.notion.so/6234ee6e90b24bdfbf12876e02898422" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>dcm2jpg 2<span class="token punctuation">.</span>16<span class="token punctuation">.</span>840<span class="token punctuation">.</span>1<span class="token punctuation">.</span>113995<span class="token punctuation">.</span>3<span class="token punctuation">.</span>110<span class="token punctuation">.</span>3<span class="token punctuation">.</span>0<span class="token punctuation">.</span>10118<span class="token punctuation">.</span>2000002<span class="token punctuation">.</span>862753<span class="token punctuation">.</span>6<span class="token punctuation">.</span>dcm ^
+2<span class="token punctuation">.</span>16<span class="token punctuation">.</span>840<span class="token punctuation">.</span>1<span class="token punctuation">.</span>113995<span class="token punctuation">.</span>3<span class="token punctuation">.</span>110<span class="token punctuation">.</span>3<span class="token punctuation">.</span>0<span class="token punctuation">.</span>10118<span class="token punctuation">.</span>2000002<span class="token punctuation">.</span>862753<span class="token punctuation">.</span>6<span class="token punctuation">.</span>jpg ^
+<span class="token operator">--</span>frame 78 <span class="token operator">--</span>icc-profile no</span></span></span></code></pre><div id="https://www.notion.so/0ac5275193f34fff8ce54176837638b2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">這是因為 dcm4che 預設會將原本的影像轉換成 sRGB，並且會自動把 YBR 的影像也都轉換成 RGB，所以在套用 sRGB 時，影像未與其他工具套用 sRGB 的結果不同，</span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">是否該預設轉 RGB，目前筆者沒有答案</strong></mark></span></span></p></div><pre id="https://www.notion.so/1b2168cc170440aeb38a01c3d59f881c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>By default, include no ICC profile, but
+</span></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"><span>transform original pixels to sRGB color</span></strong></span><span class="SemanticString"><span>
+space if an ICC Profile is specified in the
+DICOM image.</span></span></span></code></pre><div id="https://www.notion.so/bcb071bb5073464cb65c9d986f7a2ace" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2022</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>
