@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <base href="../">
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- iOS Safari -->
@@ -24,18 +25,11 @@
     font-size: 20px;
   }
 </style>
-  <title>關於我&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <title>#JAVA | ChinLin’s Blog</title>
   <meta property="og:type" content="blog">
-  <meta property="og:title" content="關於我">
-  
-  
-    <meta property="og:image" content="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1">
-  
-  <style>
-    .DateTagBar {
-      margin-top: 1.0rem;
-    }
-  </style>
+  <meta property="og:title" content="#JAVA | ChinLin’s Blog">
+  <meta name="description" content="Posts with tag #JAVA">
+  <meta property="og:description" content="Posts with tag #JAVA">
 </head>
 
 <body>
@@ -117,26 +111,54 @@
   
 </nav>
   <header class="Header">
-    
-    <div class="Header__Spacer Header__Spacer--NoCover">
-    </div>
-    
-      <div class="Header__Icon">
-        <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>
-      </div>
-    
-    <h1 class="Header__Title">關於我</h1>
-    
+    <div class="Header__Spacer--NoCover"></div>
+    <h1 class="Header__Title">#JAVA</h1>
   </header>
-  <article id="https://www.notion.so/721d7aebcf524f6f9a86648e0e7bfcb1" class="PageRoot"><div id="https://www.notion.so/defdc1c0a1ee4e6caf7e8674221a971e" class="ColorfulBlock ColorfulBlock--BgBlue Callout"><div class="Callout__Icon"><div class="Icon">🦥</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">實在是太懶了，直接看Github的Profile吧</span></span></p></div><div id="https://www.notion.so/38e56c5bcb594f13b3bcf7bb4a189e88" class="Bookmark"><a href="https://github.com/Chinlinlee"><h5 class="Bookmark__Title">Chinlinlee - Overview</h5><p class="Bookmark__Desc">You can&#x27;t perform that action at this time. You signed in with another tab or window. You signed out in another tab or window. Reload to refresh your session. Reload to refresh your session.</p><p class="Bookmark__Link">https://github.com/Chinlinlee</p></a></div></article>
-<br />
-<script src="https://utteranc.es/client.js"
-  repo="Chinlinlee/Chinlinlee.github.io"
-  issue-term="pathname"
-  theme="github-light"
-  crossorigin="anonymous"
-  async>
-</script>
+  <article class="ArticleList">
+    <details
+        id="tags-summary"
+        class="ColorfulBlock ColorfulBlock--ColorDefault Toggle"
+        open=""
+    >
+        <summary class="Toggle__Summary">
+            <span class="SemanticStringArray"
+                ><span class="SemanticString"
+                    ><strong
+                        class="SemanticString__Fragment SemanticString__Fragment--Bold"
+                        >Tags</strong
+                    ></span
+                ></span
+            >
+        </summary>
+        <div class="Toggle__Content">
+            <h3
+                id="tag-title"
+                class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"
+            >
+                <a class="Anchor" href="#tag-title"
+                    ><svg width="16" height="16" viewBox="0 0 16 16">
+                        <path
+                            fill-rule="evenodd"
+                            d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"
+                        ></path></svg></a
+                ><span class="SemanticStringArray"
+                    ><span class="SemanticString"
+                        ><span
+                            class="SemanticString__Fragment SemanticString__Fragment--Date"
+                            >@Tags</span
+                        ></span
+                    ><span class="SemanticString"> </span
+                ></span>
+            </h3>
+            <div
+                id="tags-list"
+                class="ColorfulBlock ColorfulBlock--ColorDefault Text"
+            ></div>
+        </div>
+    </details>
+    
+</article>
+
   <footer class="Footer">
   <div>&copy; ChinLin’s Blog 2021-2022</div>
   <div>&centerdot;</div>
@@ -147,13 +169,4 @@
 </body>
 
 </html>
-<script src="./scripts/code-copy.js"></script>
-<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
-<script type="text/javascript">
-    window.onload = function(e){
-        TableOfContents.init({
-            basePath: "./scripts/table-of-contents-sidebar-lib/",
-            querySelector: "body" // or other css querySelector
-        });
-    }
-</script>
+<script src="./scripts/index-tags.js"></script>

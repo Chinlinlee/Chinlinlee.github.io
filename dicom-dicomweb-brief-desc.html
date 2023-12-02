@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>DICOM 與 DICOMweb 超淺談&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="DICOM 與 DICOMweb 超淺談">
+  
+    <meta name="description" content="淺解，但依然有參考性吧?">
+    <meta property="og:description" content="淺解，但依然有參考性吧?">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">DICOM 與 DICOMweb 超淺談</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Wed, Jan 11, 2023</span>
+        
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/c402be0f6b8543c6b9da211c66c92cc7" class="PageRoot"><div id="https://www.notion.so/643aaddc6426473a9f6570c0df2bcca3" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">實驗室常常會有人事更動，而實驗室所做的專案與 DICOM 息息相關，剛進入的夥伴難免會有一段陣痛期，所以筆者想在這邊留下一點對 DICOM 以及 DICOMweb 的小筆記</span></span></p></div><h1 id="https://www.notion.so/5da13ef866c047ee9b60b528829625d7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/5da13ef866c047ee9b60b528829625d7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOM 階層式架構</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/5010edc80c2741dfb9dc0ea7eb760c73" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">DICOM 擁有 4 層架構，依序下來分別是 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Patient</code></span><span class="SemanticString">→ </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Study</code></span><span class="SemanticString">→ </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Series</code></span><span class="SemanticString">→ </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Instance</code></span><span class="SemanticString"> ，這樣子的架構非常重要，</span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">後續在查詢以及調閱影像時都是使用這樣的架構來進行傳輸</strong></span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/b6707ebc022441ea84fc08bb28ff3411" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Patient: 字面上的意思，就是單個病患，也許就是你</span></span></li><li id="https://www.notion.so/e7ecc1fd06174d3e9cab7f2bf234d12f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Study: 筆者稱之為病例，例如：出了車禍，這就算是一個病例</span></span></li><li id="https://www.notion.so/e9a0cb618fac476183a1fd9ae94e7481" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Series: 筆者稱之為系列(部位)，出了車禍，可能會需要進行腦部造影、胸腔CT造影等。一個病例中的每一次造影就算是一個 Series</span></span></li><li id="https://www.notion.so/2c03065e68884ffaaa0cff4706ba863e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Instance: 筆者稱之為單張影像，在 Series 當中，會進行造影，造影出來都會有很多影像，而每一張影像就是 Instance</span></span></li></ul></li></ul><div id="https://www.notion.so/ecc435272b9a4af3b17795de3aa7a833" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3bfb8557-5559-42fe-b4d6-ecf06e117159%2FUntitled.png?width=794&amp;table=block&amp;id=ecc43527-2b9a-4af3-b177-95de3aa7a833"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3bfb8557-5559-42fe-b4d6-ecf06e117159%2FUntitled.png?width=794&amp;table=block&amp;id=ecc43527-2b9a-4af3-b177-95de3aa7a833" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">From: </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://books.google.com.tw/books?id=tFgSRghUzGsC&amp;pg=PA68&amp;lpg=PA68&amp;dq=dicom+hierarchy&amp;source=bl&amp;ots=VwWr1p2GVv&amp;sig=ACfU3U015JdXH0oAfDH0Y-DmOskFmmkyiw&amp;hl=zh-TW&amp;sa=X&amp;ved=2ahUKEwjNg4LtsLL8AhXVCd4KHXfwB48Q6AF6BAgnEAM#v=onepage&amp;q=dicom%20hierarchy&amp;f=false">書籍</a></span></span></figcaption></figure></div><h1 id="https://www.notion.so/9f6f654ad8424b26b44a45f3d2356606" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/9f6f654ad8424b26b44a45f3d2356606"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOM Tags</span></span></h1><div id="https://www.notion.so/fe668c55c483477580e004c34eefc943" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">DICOM 主要是使用 Hex 記憶體定義它的欄位以及數值，所以才會看到上一節的 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Patient ID (0010, 0020)</code></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/a232c3f08ae544e6bfec1efe67c089c4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">Tag 通常都是由 (gggg, eeee) 組成，其中 gggg 為群組代號(Group Number)，eeee 為元素在群組中的代號 (Element Number)</span></span></li><li id="https://www.notion.so/f50ff32b6c664b59961b4587ffe1d394" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">傳輸回來的資料都會是使用 DICOM Tags 當作欄位</strong></span></span></li><li id="https://www.notion.so/1fedd4e2991242a4b24c6ecc5f9a6d8e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">大家一定不會記得 DICOM Tags 以及他的真實代表的意思，所以都會用一些網站做輔助</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/59d4d338860d4b93b06ddf1c0a5f5a31" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://dicom.innolitics.com/ciods">DICOM Standard Browser</a></span><span class="SemanticString">: 非常好用的網站，還對每個 IOD (Information Object Definition)</span></span></li><li id="https://www.notion.so/5f5decab916d423a8370866263aec8d7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://dicom.nema.org/medical/dicom/current/output/chtml/part06/chapter_6.html">Registry of DICOM Data Elements</a></span><span class="SemanticString">: DICOM 官方的說明文件</span></span><blockquote id="https://www.notion.so/4cae609fa7094aba9b33beaa461de8c1" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">小心資料過多，開啟時可能發成崩潰情況</span></span></blockquote></li></ul></li></ul><h1 id="https://www.notion.so/25cef8218ad4422492e14b3812ec581f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/25cef8218ad4422492e14b3812ec581f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOM Json Model</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/52e8c2d77965499f9f5835176d06adfe" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">通常筆者都是使用 DICOM Json 來作為返回資料的格式 (JSON 比較好看點)</span></span></li><li id="https://www.notion.so/b53dd2a0c28e4baabf251462a8712c6c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">範例如下:</span></span></li></ul><pre id="https://www.notion.so/c81388220c63436c90020799faed2c5c" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+     <span class="token property">"0020000D"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"vr"</span><span class="token operator">:</span> <span class="token string">"UI"</span><span class="token punctuation">,</span>
+      <span class="token property">"Value"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"1.2.392.200036.9116.2.2.2.1762893313.1029997326.945873"</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token punctuation">{</span>
+    <span class="token property">"0020000D"</span> <span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"vr"</span><span class="token operator">:</span> <span class="token string">"UI"</span><span class="token punctuation">,</span>
+      <span class="token property">"Value"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"1.2.392.200036.9116.2.2.2.2162893313.1029997326.945876"</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span></span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/db1e37cd8c074bdba1da9e6510a414ad" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">其中 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">0020000D</code></span><span class="SemanticString"> 是 DICOM Tag</span></span></li><li id="https://www.notion.so/a5b18dfcfb59437581acf45463efbc56" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">vr</code></span><span class="SemanticString"> 代表的是這個欄位的資料型態</span></span></li><li id="https://www.notion.so/f663d892b70a4fc496c62f0d5ef00e36" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">Value</code></span><span class="SemanticString"> 代表的是數值</span></span></li></ul><h1 id="https://www.notion.so/97eacfeda83b4e9d9dcd273b01b4a51c" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/97eacfeda83b4e9d9dcd273b01b4a51c"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOMweb 傳輸－查詢 (QIDO-RS)</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/b80c317f9ca148fd82ee78a3640eac2a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">QIDO-RS 全名為 </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">Q</span></span><span class="SemanticString">uery based on </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">I</span></span><span class="SemanticString">D for </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">D</span></span><span class="SemanticString">ICOM </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">O</span></span><span class="SemanticString">bject ，讓您可以透過 web API 去 Server 查詢特定的影像「資訊」</span></span></li></ul><h2 id="https://www.notion.so/bca7fbdb46fc4ca2b125dca0f7e21714" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/bca7fbdb46fc4ca2b125dca0f7e21714"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">提供的方法(web API):</span></span></h2><div><div></div><div></div><div></div><div></div></div><h2 id="https://www.notion.so/58be556ab2b649268a74a7cedf55f7ff" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/58be556ab2b649268a74a7cedf55f7ff"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">查詢參數</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/666fa3d2e9654b53afe345ef28984c10" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">QIDO-RS 也提供了幾項查詢參數讓您使用</span></span></li></ul><div><div></div><div></div><div></div><div></div><div></div><div></div></div><h1 id="https://www.notion.so/d4b0fe9efafe4cac8ec45bb22a0197ec" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/d4b0fe9efafe4cac8ec45bb22a0197ec"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOMweb 傳輸－調閱 (WADO-RS)</span></span></h1><div id="https://www.notion.so/27352295f9c54f66985b7a3f6774c9be" class="ColorfulBlock ColorfulBlock--BgRed Callout"><div class="Callout__Icon"><div class="Icon">⚠️</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">WADO-RS 可以讓您調閱多張影像，但注意，WADO-RS 在回傳資料時會使用 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.ietf.org/rfc/rfc2387.txt">multipart/related</a></span><span class="SemanticString"> 的格式回傳資料，您必須使用一些工具才能將影像解析出來 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/dcmjs-org/dicomweb-client/blob/master/src/message.js">dicomweb-client</a></span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/094f0262baa142a4afae4c9326a29cc1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">WADO-RS 全名為 </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">W</span></span><span class="SemanticString">eb </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">A</span></span><span class="SemanticString">ccess to </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">D</span></span><span class="SemanticString">ICOM </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">O</span></span><span class="SemanticString">bjects，讓您可以透過 web API 去 Server 調閱特定的影像</span></span></li></ul><h2 id="https://www.notion.so/a78b94c0757a4fb0a9a9759b19f085b3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/a78b94c0757a4fb0a9a9759b19f085b3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">提供的方法 (web API)</span></span></h2><div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><h2 id="https://www.notion.so/ee71944dc72e452a9ab7a8148ea976b2" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/ee71944dc72e452a9ab7a8148ea976b2"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參數</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/8d49438e9a6040f494680c37d58bd291" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">WADO-RS 提供了一些參數對影像進行操作，因筆者不常用這些參數所以這邊僅搬運參數過來</span></span></li></ul><div><div></div><div></div><div></div><div></div><div></div></div><h1 id="https://www.notion.so/a66ef2edd42844f5a55d5a5b6ca703f5" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/a66ef2edd42844f5a55d5a5b6ca703f5"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOMweb 傳輸－調閱 (WADO-URI)</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/9d915d94f0034f5e9b51520c8156d5c2" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">WADO-URI 與 WADO-RS 最大的差別在於，他可以直接取回單張的 DICOM (application) 或 JPEG (image/jpeg)，不用額外解析回傳資料，使用上較方便</span></span><blockquote id="https://www.notion.so/f5c0fbd2594a4601863570f264e9051f" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">但代價就是取多張影像時，需要送出較多的 request</span></span></blockquote></li></ul><h2 id="https://www.notion.so/3e102cd8635848b3a9c5d38a8e77deef" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/3e102cd8635848b3a9c5d38a8e77deef"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">提供的方法 (web API)</span></span></h2><div><div></div><div></div></div><h1 id="https://www.notion.so/4eb251dbd36f48c09e18f03cef691744" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/4eb251dbd36f48c09e18f03cef691744"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">DICOMweb 傳輸－上傳 (STOW-RS)</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/6d0b8c4c0ce04bf4a417df87b2bfc203" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">全名 </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">ST</span></span><span class="SemanticString">ore </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">O</span></span><span class="SemanticString">ver the </span><span class="SemanticString"><span class="SemanticString__Fragment SemanticString__Fragment--Unknown">W</span></span><span class="SemanticString">eb，讓您可以透過 Web API 上傳影像，但可惜的是它並不是用一般常見的方式 (multipart/form-data)上傳，而是使用 multipart/related</span></span></li></ul><div id="https://www.notion.so/399f681d38ce4a0a96e740dd7341a826" class="ColorfulBlock ColorfulBlock--BgBlue Callout"><div class="Callout__Icon"><div class="Icon">📢</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">由於 Postman 不支持 POST multipart/related，所以您需要使用程式語言或者 cURL 來上傳 DICOM 影像</span></span></p></div><h2 id="https://www.notion.so/02879aa512a14830b45df001d06ae5a7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/02879aa512a14830b45df001d06ae5a7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">提供的方法 (web API)</span></span></h2><div><div></div><div></div><div></div></div><h2 id="https://www.notion.so/e69741c57576488ab5939df6e7eef388" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/e69741c57576488ab5939df6e7eef388"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Example</span></span></h2><pre id="https://www.notion.so/d4b074b052e34f1a97564e448af19af8" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">curl</span> <span class="token parameter variable">--location</span> <span class="token parameter variable">--request</span> POST <span class="token string">"{Service URL}/v{version}/studies"</span>
+<span class="token parameter variable">--header</span> <span class="token string">"Accept: application/dicom+json"</span>
+<span class="token parameter variable">--header</span> <span class="token string">"Content-Type: multipart/related; type=<span class="token entity" title="\&quot;">\"</span>application/dicom<span class="token entity" title="\&quot;">\"</span>"</span>
+<span class="token parameter variable">--header</span> <span class="token string">"Authorization: Bearer {token value}"</span>
+<span class="token parameter variable">--form</span> <span class="token string">"file1=@{path-to-dicoms}/red-triangle.dcm;type=application/dicom"</span>
+--trace-ascii <span class="token string">"trace.txt"</span></span></span></span></code></pre><h1 id="https://www.notion.so/98ff92518af541b49435b37d6a12d853" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/98ff92518af541b49435b37d6a12d853"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參考資料</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/c9dc8a94779b4d2a879c53fc3b82efc8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://b8807053.pixnet.net/blog/post/10116283">醫療數位影像傳輸協定（DICOM，Digital Imaging and Communications in</a></span></span></li><li id="https://www.notion.so/c5dfb1ab9732431d956cff6a4b1191b7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.dicomstandard.org/using/dicomweb/query-qido-rs">Search (QIDO-RS)</a></span></span></li><li id="https://www.notion.so/18afef58d3334fb58c6ce8f0fb27ec60" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.dicomstandard.org/using/dicomweb/retrieve-wado-rs-and-wado-uri">Retrieve (WADO-RS)</a></span></span></li><li id="https://www.notion.so/affdaaab5bb5404098d5d1489395956f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://dicom.nema.org/dicom/2013/output/chtml/part18/sect_F.2.html">F.2 DICOM JSON Model</a></span></span></li><li id="https://www.notion.so/57b9df7c576e4929be70ac40c51f32a0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://learn.microsoft.com/zh-tw/azure/healthcare-apis/dicom/dicomweb-standard-apis-with-dicom-services#postman">https://learn.microsoft.com/zh-tw/azure/healthcare-apis/dicom/dicomweb-standard-apis-with-dicom-services#postman</a></span><span class="SemanticString">   (有講到 Postman 不適用 multipart)</span></span></li><li id="https://www.notion.so/e7fcce3972034968aace3f1091f11836" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://learn.microsoft.com/zh-tw/azure/healthcare-apis/dicom/dicomweb-standard-apis-curl#uploading-dicom-instances-stow">上傳 STOW (DICOM 實例)</a></span></span></li></ul><div id="https://www.notion.so/b4f921d8c26d4bdc9ad82da77b697f24" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2022</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>DICOM UPS (WorkItems) Subscription 訂閱機制&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="DICOM UPS (WorkItems) Subscription 訂閱機制">
+  
+    <meta name="description" content="紀錄自己對於 UPS Subscription 實作的記憶">
+    <meta property="og:description" content="紀錄自己對於 UPS Subscription 實作的記憶">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">DICOM UPS (WorkItems) Subscription 訂閱機制</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Dec 2, 2023</span>
+        
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/606c5a9eb7494b6291a97e6a195b0b41" class="PageRoot"><div id="https://www.notion.so/7070b5d90e7e4a7191a99810ff616d90" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">因為有隱匿高手把我的 Raccoon 的 UPS 轉換成 SQL 版本，但是實作的讓我說不出話，只好恢復一下自己實作 DICOM UPS 訂閱機制的記憶。不過想了想，UPS Subscription 實在是有點複雜，必須來記錄一下它的概念。</span></span></p></div><h1 id="https://www.notion.so/1322006f06cc4fb08e33768f8f14799f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/1322006f06cc4fb08e33768f8f14799f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">UPS 的操作</span></span></h1><div id="https://www.notion.so/bb86c77feeba436fa0d055ffe5cffd7a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">首先，我們來看看 UPS 有哪些操作:</span></span></p></div><div id="https://www.notion.so/66054863bd58474cb8e1f6f8d9f66af8" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2Fafb47242-8274-41f8-bda5-98cf3ce066bc%2FUntitled.png?width=964&amp;table=block&amp;id=66054863-bd58-474c-b8e1-f6f8d9f66af8"><img src="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2Fafb47242-8274-41f8-bda5-98cf3ce066bc%2FUntitled.png?width=964&amp;table=block&amp;id=66054863-bd58-474c-b8e1-f6f8d9f66af8" style="width:100%"/></a><figcaption><span class="SemanticStringArray"></span></figcaption></figure></div><div id="https://www.notion.so/01582b516b9043ebbcfb7d0f986445a8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">不外乎，UPS 就跟一般世界的商業邏輯差不多，擁有 CRUD 的功能，但這個 Subscribe，到底在訂閱什麼？</span></span></p></div><h1 id="https://www.notion.so/525d96f84c0444b1a97d3fd7a79f284f" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/525d96f84c0444b1a97d3fd7a79f284f"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">UPS 的訂閱</span></span></h1><div id="https://www.notion.so/398f4d7ac9564a02bcd2b208b1398be4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">節錄自: </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_11.10">Subscribe Transaction</a></span></span></p></div><blockquote id="https://www.notion.so/2d6e3928201043d6b14ed626728b8a21" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">This transaction creates a Subscription to a Worklist or Workitem resource. It corresponds to the UPS DIMSE N-ACTION operation &quot;Subscribe to Receive UPS Event Reports&quot;.</span></span></blockquote><blockquote id="https://www.notion.so/915c80c999744273afe92fe50743fd55" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">Once a Subscription has been created the user agent will receive notifications containing Event Reports for events associated with the Subscription&#x27;s resource. To receive the notifications generated by Subscriptions, the user agent must have first opened a Notification Connection between itself and the origin server using the Open Notification Connection transaction; see </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://dicom.nema.org/medical/dicom/current/output/html/part18.html#sect_8.10.4">Section 8.10.4</a></span><span class="SemanticString">.</span></span></blockquote><div id="https://www.notion.so/c5d231deeeeb4bef933fe7e49fdb192b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">我們主要看第二段，它說明了：當 Subscription 建立時，User 會收到 Subscription 的訊息，而要收到訊息的話，User 必須先建立與 server 的 Open Notification Connection transaction</span></span></p></div><div id="https://www.notion.so/c0f9db1c89d44550bc0f2332840ec4ee" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">那這個 Open Notification Connection transaction 又是個什麼鬼？</span></span></p></div><div id="https://www.notion.so/95892f7293084397890c2fa1be1e236c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">一點開上面的 Section 8.10.4，你就可以看到熟悉的字眼：</span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">The connection uses the WebSocket protocol</strong></mark></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">.</strong></span><span class="SemanticString"> The connection can use the same TCP port as the HTTP connection, but they are separate connections.</span></span></p></div><div id="https://www.notion.so/24b817e5819a498b8085e6f8cb98dc64" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">哦！原來是 WebSocket</span></span></p></div><div id="https://www.notion.so/9f6380654d39438a9d7f6b9a6fc31ab2" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">這樣一看，腦子就通了，這不就跟 yt 一樣，(1) 訂閱頻道，(2) 頻道有新影片時，傳送通知到帳號。轉換成 UPS 的概念就是 </span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">(1) 訂閱 UPS，(2) 進行相關操作，透過 WebSocket 把相關操作的 Subscription DICOM Json 傳送給 User</strong></span></span></p></div><h1 id="https://www.notion.so/e6428854a43d4824b19249e906463437" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/e6428854a43d4824b19249e906463437"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">UPS 的訂閱種類</span></span></h1><div id="https://www.notion.so/334e9d7638e34a45a70901457ccb08e6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下是 UPS 提供的 3 種訂閱種類，那筆者對於不同種類有不同的見解，若有誤，還請大家多多包涵以及指教。</span></span></p></div><div><div></div><div></div><div></div><div></div></div><div id="https://www.notion.so/2fa4d426e57d4b6f8af26842b211f1dd" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">看完後，我腦中所留下的實作內容大概是這樣:</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/9aa4b8712443421cb907629e48a68296" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">處理單個 WorkItem 的訂閱</span></span></li><li id="https://www.notion.so/637c362f8b924cee9da7084c2a37b8c4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">處理 Global 的訂閱</span></span></li><li id="https://www.notion.so/e912841da3504e27bb3ef137a251714a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">不同已連接的 WebSocket 的處理</span></span></li><li id="https://www.notion.so/2be586ebe6a24c748b33f14740566b09" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">如何把 Filtered Global Subscription 的查詢儲存起來</span></span></li></ul><div id="https://www.notion.so/3ee33e97ac4f4ccebd1a5f3446492b37" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">我只能說，想那麼多幹嘛，看看 dcm4che，別人都實作好了，拿出來參考吧</span></span></p></div><h1 id="https://www.notion.so/427b1a64a08e4d2383fd1921ee793edf" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/427b1a64a08e4d2383fd1921ee793edf"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">訂閱觸發流程</span></span></h1><div id="https://www.notion.so/37649905ea5b4055b584eefd50dc23cf" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">其實上面說那麼多，這邊才是最主要的，不過也是個人紀錄當時的我，是如何實作 Subscription 的。</span></span></p></div><h2 id="https://www.notion.so/73bd8b0209c7435193da85d9ae78c7ac" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/73bd8b0209c7435193da85d9ae78c7ac"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">建立 WorkItem Subscription 觸發流程</span></span></h2><div id="https://www.notion.so/739f96249b8840b693c59fb6bd84110a" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">我們可能對某個 aeTitle 建立 WorkItem 有興趣，就可以透過 Subscription 去知道某種 WorkItem 被建立了！</span></span></p></div><div id="https://www.notion.so/c0b5ab43b75842359aa23388fe956e79" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">那這邊講一下流程:</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/2e48f7efeb3f4c00a8dacd67af3f504f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">把相關的 Global Subscription 撈出來</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/22ec84dc43e144a38bdb33af5528f351" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">迭代 DB 的 Global Subscription (cursor)</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/0ef979e247574a0eb01890f1a4179939" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">沒有 query key 的就等同匹配</span></span></li><li id="https://www.notion.so/dfad1199cd5a4ea58b2bbafd927b1449" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">如果與 query key 相符 (count &gt; 0，因為我不需要知道 workitem 詳細資料，只需要知道這個 subscription 相符)，就等同匹配</span></span></li></ul></li></ul></li><li id="https://www.notion.so/dea1ca75d54e47c4a8cbeec972a0b971" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">迭代所有相關的 Global Subscription ，並進行單個 workitem 的訂閱建立</span></span></li><li id="https://www.notion.so/cfbf8f4368764a76aab088e442ebe335" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">尋找所有相關已訂閱的 subscription</span></span></li><li id="https://www.notion.so/26fc1c0c5afa4b6a9981c499729be837" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">對指定 aeTitle 的 websocket 進行訊息傳送</span></span></li></ul><div id="https://www.notion.so/46b51b8e1cc64091a3d4356d9547a378" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2022</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>
