@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Compiling vmmon module fails on linux (VMware module 無法安裝)&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Compiling vmmon module fails on linux (VMware module 無法安裝)">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">Compiling vmmon module fails on linux (VMware module 無法安裝)</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jan 18, 2024</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
+            <a href="tag/Tech.html">Tech</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/1becb70e31324e84aacef2d267c6fc5e" class="PageRoot"><div id="https://www.notion.so/471d643a80b84ad68e907510491e2c79" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">今天在 Linux 開啟 VMware 的時候突然跳出要更新 module 的訊息</span></span></p></div><div id="https://www.notion.so/2b864aae8c3f4ae4b3a04a85698828ff" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F144b7a9e-d530-41ca-af37-6dd344086f68%2FUntitled.png?width=400&amp;table=block&amp;id=2b864aae-8c3f-4ae4-b3a0-4a85698828ff"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F144b7a9e-d530-41ca-af37-6dd344086f68%2FUntitled.png?width=400&amp;table=block&amp;id=2b864aae-8c3f-4ae4-b3a0-4a85698828ff" style="width:400px"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">轉自參考資料1</span></span></figcaption></figure></div><div id="https://www.notion.so/bb28c8ff18314e80a4d0ae1ac7fb36ec" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">按下 Install 等了一下子，竟然!!!!! 哭啊QQ</span></span></p></div><div id="https://www.notion.so/c5889d0a443c4edb8fea3f2abcfddb71" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff89b0a6c-c9ff-4130-928a-93277a6ffed6%2FUntitled.png?width=400&amp;table=block&amp;id=c5889d0a-443c-4edb-8fea-3f2abcfddb71"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff89b0a6c-c9ff-4130-928a-93277a6ffed6%2FUntitled.png?width=400&amp;table=block&amp;id=c5889d0a-443c-4edb-8fea-3f2abcfddb71" style="width:400px"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">轉自參考資料1</span></span></figcaption></figure></div><h1 id="https://www.notion.so/2866eea4ee2149178d80faa791eeccc7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/2866eea4ee2149178d80faa791eeccc7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">解決方法</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/a85f0c2bf10d426ba0070aba1fe91e9a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">自行 build vmware modules against recent kernels</span></span></li></ul><div id="https://www.notion.so/4d30504558b04ff3bc6994e838c83e25" class="Divider"></div><h2 id="https://www.notion.so/ff71b8e2b9f64d919399673e198a9cd3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/ff71b8e2b9f64d919399673e198a9cd3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">解決步驟</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/dda66f8c2d0a4963862376e7c790b446" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">clone </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/mkubecek/vmware-host-modules.git">vmware-host-modules</a></span><span class="SemanticString"> repo</span></span></li></ul><pre id="https://www.notion.so/628b2dd84d3b4820a88fe3c7bed1d7f2" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">git</span> clone https://github.com/mkubecek/vmware-host-modules.git</span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/6f4b64361b34409881ba9b2b101ec050" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">進入 cloned 的專案</span></span></li></ul><pre id="https://www.notion.so/402e415a5a02464f99f7a1484ac36eb8" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token builtin class-name">cd</span> vmware-host-modules/</span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/248847ec733f4e699b4c7aa63282c192" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">先檢查 vmware 的版本</span></span></li></ul><pre id="https://www.notion.so/2f73a60ea1904a89be440fdac06158ad" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>vmware <span class="token parameter variable">-v</span></span></span></span></code></pre><div id="https://www.notion.so/b014669b09d84f95b379b23c6e1b4de7" class="Image Image--Normal"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb0029645-9109-46b2-b1ac-69f1f422f755%2FUntitled.png?width=613&amp;table=block&amp;id=b014669b-09d8-4f95-b379-b23c6e1b4de7"><img src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fb0029645-9109-46b2-b1ac-69f1f422f755%2FUntitled.png?width=613&amp;table=block&amp;id=b014669b-09d8-4f95-b379-b23c6e1b4de7" style="width:613px"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">檢查 vmware 版本 command 結果圖</span></span></figcaption></figure></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/05c2213bea1c43f7ba3d4ec7b5618f24" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">切換 repo 的 branch</span></span></li></ul><pre id="https://www.notion.so/3530a236a2b54d698916e7268a4e00ab" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">git</span> checkout workstation-16.2.1</span></span></span></code></pre><blockquote id="https://www.notion.so/f741ba1e3c94481d9920d85053390aeb" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">記得後面是您 VMware 的版本對應的 branch，可自行去 git repo 看</span></span></blockquote><ul class="BulletedListWrapper"><li id="https://www.notion.so/56b9ba79b4564fbbb2ee55a3dc097361" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">設定 VMware 的使用者</span></span></li></ul><pre id="https://www.notion.so/44d6c6cee4e64dd4ac9ddc82dbd290c2" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">make</span> <span class="token assign-left variable">VM_UNAME</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">uname</span> <span class="token parameter variable">-r</span><span class="token variable">)</span></span></span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/972ed20577e147b6a69766b0b636fd43" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">安裝</span></span></li></ul><pre id="https://www.notion.so/9a835e801ec74459a03510d779f0c7d9" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span></span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/08091f51590d4dc686dcfd315036f04f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">檢查 (在這成功就代表 ok 囉)</span></span></li></ul><pre id="https://www.notion.so/bfc679f0e4754d488626143cce59348b" class="Code Code--NoWrap"><code><span class="SemanticStringArray"><span class="SemanticString"><span>systemctl restart vmware
+systemctl status vmware</span></span></span></code></pre><h1 id="https://www.notion.so/30c780aae2674ef48a713e6cfd1c84a3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/30c780aae2674ef48a713e6cfd1c84a3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參考資料</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/97337f0cdff64c4abee0a0ba8ce2cace" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://communities.vmware.com/t5/VMware-Workstation-Pro/Compiling-vmmon-module-fails-on-linux-kernel-5-16-0-arch1-1/td-p/2887820/page/2">https://communities.vmware.com/t5/VMware-Workstation-Pro/Compiling-vmmon-module-fails-on-linux-kernel-5-16-0-arch1-1/td-p/2887820/page/2</a></span></span></li></ul></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2024</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>

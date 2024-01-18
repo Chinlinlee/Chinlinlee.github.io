@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>Raccoon 採用 Controller-Service-Repository 架構&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="Raccoon 採用 Controller-Service-Repository 架構">
+  
+    <meta name="description" content="紀錄自己重構 Raccoon 的過程">
+    <meta property="og:description" content="紀錄自己重構 Raccoon 的過程">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">Raccoon 採用 Controller-Service-Repository 架構</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Thu, Jan 18, 2024</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--default">
+            <a href="tag/Tech.html">Tech</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--gray">
+            <a href="tag/DICOM.html">DICOM</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--orange">
+            <a href="tag/MongoDB.html">MongoDB</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Node.JS.html">Node.JS</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/74c583d661dd4ed38cdca3e5a1ae1c86" class="PageRoot"><div id="https://www.notion.so/cb173f1adea14d0595e16c859b3931ac" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">原本 Raccoon 使用的是像是 MVC (Model View Controller) 架構，有 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">api</code></span><span class="SemanticString"> 資料夾放置 controllers，</span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">models</code></span><span class="SemanticString"> 放置資料處理相關的檔案。在軍中放假的期間，有嘗試重構，加入 service，讓 raccoon 比較容易地去更改資料庫依賴( MongoDB 轉換到 SQL )，雖然重構後在實作上變的簡單一些，但其實最好的狀況是更改 repository 的使用，這樣 controller 跟 service 理論上可以不更改，達到更加容易抽換資料庫的作用。</span></span></p></div><h1 id="https://www.notion.so/68d8956bd27a4c068b8b70862d8ffd11" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/68d8956bd27a4c068b8b70862d8ffd11"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Controller - Service - Repository</span></span></h1><div id="https://www.notion.so/b18e5e5e9f5f4172a666fe0ca288a680" class="ColorfulBlock ColorfulBlock--BgBlue Callout"><div class="Callout__Icon"><div class="Icon">🚨</div></div><p class="Callout__Content"><span class="SemanticStringArray"><span class="SemanticString">以下使用 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.perplexity.ai/">perplexity</a></span><span class="SemanticString"> 搜尋</span></span></p></div><div id="https://www.notion.so/2d0841c927404df398364baeb3914377" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">Controller-Service-Repository 設計模式可以幫助解耦程式內不同的內容，以提高模組化、可維護性和可測試性</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/a6bf35bdff30493c9bcae06e08f65d61" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Controller</strong></span><span class="SemanticString">: 處理 incoming 的請求 (request)，呼叫適當的 service，並回應處理狀態 (response/reply)</span></span></li><li id="https://www.notion.so/1acc75e3a3224065a9c369d6d2248a04" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Service</strong></span><span class="SemanticString">: 包含業務邏輯，並且是 Controller 和 Repository 的中介層，Service 會與 Repository 互動 (CRUD) 執行業務邏輯，並把結果回傳給 Controller</span></span></li><li id="https://www.notion.so/4f0f32d4db284c65a3940d0273c3b86b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Repository</strong></span><span class="SemanticString">: 負責從資料庫 CRUD</span></span></li></ul><h1 id="https://www.notion.so/db252d534192486f9d8aa22f6f3d5e81" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/db252d534192486f9d8aa22f6f3d5e81"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Raccoon 更改前各層程式碼</span></span></h1><div id="https://www.notion.so/b2eca3662fb246649159a5ed39cdc2c6" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下就用最簡單的 create patient 做範例</span></span></p></div><h2 id="https://www.notion.so/5c7cd2e4852841a68c9f57d2cf6d40cd" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/5c7cd2e4852841a68c9f57d2cf6d40cd"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Controller</span></span></h2><pre id="https://www.notion.so/98b46697fc264eec8e016d5b8db167d7" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">const</span> <span class="token punctuation">{</span> Controller <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@root/api/controller.class"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> ApiLogger <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@root/utils/logs/api-logger"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span>
+  CreatePatientService<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@api/dicom-web/controller/PAM-RS/service/create-patient.service"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> ApiErrorArrayHandler <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@error/api-errors.handler"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">CreatePatientController</span> <span class="token keyword">extends</span> <span class="token class-name">Controller</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>apiLogger <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ApiLogger</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>request<span class="token punctuation">,</span> <span class="token string">"PAM-RS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>apiLogger<span class="token punctuation">.</span><span class="token function">addTokenValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">async</span> <span class="token function">mainProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>apiLogger<span class="token punctuation">.</span>logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Create Patient"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> createPatientService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CreatePatientService</span><span class="token punctuation">(</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>request<span class="token punctuation">,</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>response
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> createPatientID <span class="token operator">=</span> <span class="token keyword">await</span> createPatientService<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>response
+        <span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"content-type"</span><span class="token punctuation">,</span> <span class="token string">"application/dicom+json"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">201</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span>createPatientID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> apiErrorArrayHandler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ApiErrorArrayHandler</span><span class="token punctuation">(</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>response<span class="token punctuation">,</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>apiLogger<span class="token punctuation">,</span>
+        e
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> apiErrorArrayHandler<span class="token punctuation">.</span><span class="token function">doErrorResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+module<span class="token punctuation">.</span><span class="token function-variable function">exports</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> controller <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CreatePatientController</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> controller<span class="token punctuation">.</span><span class="token function">doPipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></span></span></span></code></pre><blockquote id="https://www.notion.so/03dd37ba2ae24b9e9c731219eba3aa6a" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">目前 controller 算是還 ok，都是直接呼叫 service 做相對應操作，最後進行回傳</span></span></blockquote><h2 id="https://www.notion.so/cb7984ef0c2e420099c40d316cdbf8a8" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/cb7984ef0c2e420099c40d316cdbf8a8"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Service</span></span></h2><pre id="https://www.notion.so/e058879c2ea04fdb8e63ef7c21649069" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">const</span> <span class="token punctuation">{</span> PatientModel <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@dbModels/patient.model"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> set<span class="token punctuation">,</span> get <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"lodash"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> shortHash <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"shorthash2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> <span class="token literal-property property">v4</span><span class="token operator">:</span> uuidV4 <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"uuid"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">CreatePatientService</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   *
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   */</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>request <span class="token operator">=</span> req<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>response <span class="token operator">=</span> res<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">async</span> <span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> incomingPatient <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>request<span class="token punctuation">.</span>body<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> patientID <span class="token operator">=</span> <span class="token function">shortHash</span><span class="token punctuation">(</span><span class="token function">uuidV4</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">set</span><span class="token punctuation">(</span>incomingPatient<span class="token punctuation">,</span> <span class="token string">"patientID"</span><span class="token punctuation">,</span> patientID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">set</span><span class="token punctuation">(</span>incomingPatient<span class="token punctuation">,</span> <span class="token string">"00100020.Value"</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>patientID<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> patient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PatientModel</span><span class="token punctuation">(</span>incomingPatient<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> patient<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      patientID<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+module<span class="token punctuation">.</span>exports<span class="token punctuation">.</span>CreatePatientService <span class="token operator">=</span> CreatePatientService<span class="token punctuation">;</span></span></span></span></code></pre><blockquote id="https://www.notion.so/40feec3bba6f40e4a18fb0752c15eb36" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">可以看到 service 的 create function 確實是新增 patient，但有一個問題是，</span><span class="SemanticString"><mark class="SemanticString__Fragment SemanticString__Fragment--HighlightedColor SemanticString__Fragment--ColorRed"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">呼叫的內容其實是 MongoDB 專屬的，這邊就必須更改，在 MongoDB 的功能上在 wrap 一層創建 patient 的 fcuntion</strong></mark></span></span></blockquote><h3 id="https://www.notion.so/cb23b262d46547d3a8d3eb253478b5c4" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/cb23b262d46547d3a8d3eb253478b5c4"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Repository</span></span></h3><pre id="https://www.notion.so/e51f9e174ef44616a3f9242ef5db3227" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">const</span> mongoose <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"mongoose"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> _ <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"lodash"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> tagsNeedStore <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"../../DICOM/dicom-tags-mapping"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> getVRSchema <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"../schema/dicomJsonAttribute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> tagsOfRequiredMatching <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"../../DICOM/dicom-tags-mapping"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> raccoonConfig <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@root/config-class"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span>
+  DicomSchemaOptionsFactory<span class="token punctuation">,</span>
+  PatientDocDicomJsonHandler<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"../schema/dicom.schema"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> dictionary <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@models/DICOM/dicom-tags-dic"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> patientSchemaOptions <span class="token operator">=</span> _<span class="token punctuation">.</span><span class="token function">merge</span><span class="token punctuation">(</span>
+  DicomSchemaOptionsFactory<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"patient"</span><span class="token punctuation">,</span> PatientDocDicomJsonHandler<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    <span class="token literal-property property">methods</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token function-variable function">toDicomJson</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> obj <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>_id<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>patientID<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>studyPaths<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>deleteStatus<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>createdAt<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>updatedAt<span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> obj<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">statics</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token function-variable function">getPathGroupQuery</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">iParam</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> <span class="token punctuation">{</span> patientID <span class="token punctuation">}</span> <span class="token operator">=</span> iParam<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+          <span class="token literal-property property">$match</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token string-property property">"00100020.Value"</span><span class="token operator">:</span> patientID<span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token comment">/**
+       *
+       * @param {import("../../../utils/typeDef/dicom").DicomJsonMongoQueryOptions} queryOptions
+       * @returns
+       */</span>
+      <span class="token function-variable function">getDicomJsonProjection</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">queryOptions</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> fields <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> tag <span class="token keyword">in</span> tagsOfRequiredMatching<span class="token punctuation">.</span>Patient<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          fields<span class="token punctuation">[</span>tag<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> fields<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token comment">/**
+       *
+       * @param {string} patientId
+       * @param {any} patient
+       */</span>
+      <span class="token function-variable function">findOneOrCreatePatient</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">patientId<span class="token punctuation">,</span> patient</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">/** @type {PatientModel | null} */</span>
+        <span class="token keyword">let</span> foundPatient <span class="token operator">=</span> <span class="token keyword">await</span> mongoose<span class="token punctuation">.</span><span class="token function">model</span><span class="token punctuation">(</span><span class="token string">"patient"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findOne</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          <span class="token string-property property">"00100020.Value"</span><span class="token operator">:</span> patientId<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>foundPatient<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">/** @type {PatientModel} */</span>
+          <span class="token keyword">let</span> patientObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">mongoose<span class="token punctuation">.</span>model</span><span class="token punctuation">(</span><span class="token string">"patient"</span><span class="token punctuation">)</span><span class="token punctuation">(</span>patient<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          patient <span class="token operator">=</span> <span class="token keyword">await</span> patientObj<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">return</span> patient<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> patientSchema <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">mongoose<span class="token punctuation">.</span>Schema</span><span class="token punctuation">(</span>
+  <span class="token punctuation">{</span>
+    <span class="token literal-property property">patientID</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> String<span class="token punctuation">,</span>
+      <span class="token keyword">default</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">required</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">studyPaths</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token punctuation">[</span>String<span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token keyword">default</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">deleteStatus</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> Number<span class="token punctuation">,</span>
+      <span class="token keyword">default</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  patientSchemaOptions
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Index patient id</span>
+patientSchema<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">patientID</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+patientSchema<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token string-property property">"00100020"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> patientModel <span class="token operator">=</span> mongoose<span class="token punctuation">.</span><span class="token function">model</span><span class="token punctuation">(</span><span class="token string">"patient"</span><span class="token punctuation">,</span> patientSchema<span class="token punctuation">,</span> <span class="token string">"patient"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> patientModel<span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports<span class="token punctuation">.</span>PatientModel <span class="token operator">=</span> patientModel<span class="token punctuation">;</span></span></span></span></code></pre><blockquote id="https://www.notion.so/aa8325bd146e4fbca59237c7e906f1e5" class="ColorfulBlock ColorfulBlock--ColorDefault Quote"><span class="SemanticStringArray"><span class="SemanticString">repository 是使用 mongoose 來實作，好在 mongoose 有 statics 和 methods 讓我們可以 wrap CRUD 的功能</span></span></blockquote><h1 id="https://www.notion.so/a8c33c7e8f6049cab48d4dc907b27e80" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/a8c33c7e8f6049cab48d4dc907b27e80"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Raccoon 更改後各層程式碼</span></span></h1><h2 id="https://www.notion.so/61889419ca9349948138350fddeef013" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/61889419ca9349948138350fddeef013"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Controller</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/a1400222c16c4ccbac7a160bf16c3e20" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">沒改變</span></span></li></ul><h2 id="https://www.notion.so/690c88e42ef94cb2ab7c34af688e8d88" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/690c88e42ef94cb2ab7c34af688e8d88"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Service</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/19dc9e018edc492db9810b086cb3fb67" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">在這裡我 wrap 了創建 pateint 的 function 並命名為 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">createOrUpdatePateint</code></span><span class="SemanticString"> ，最後回傳 Patient 的 General DICOM Json</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/568ebab58a2d498997b261f03068cb29" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">這樣我如果換另一個 database 的套件，我只要實作 PatientModel，讓他有接收 patientID 和 patient (json) 參數的 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">createOrUpdatePatient</code></span><span class="SemanticString"> function 就可以不修改 controller 和 service</span></span></li></ul></li></ul><pre id="https://www.notion.so/eb74dea284964c5b810430cff79ac1be" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">const</span> <span class="token punctuation">{</span> PatientModel <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"@dbModels/patient.model"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> set<span class="token punctuation">,</span> get <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"lodash"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">CreatePatientService</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   *
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   */</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>request <span class="token operator">=</span> req<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>response <span class="token operator">=</span> res<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">async</span> <span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> incomingPatient <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>request<span class="token punctuation">.</span>body<span class="token punctuation">;</span>
+    <span class="token keyword">let</span> patientID <span class="token operator">=</span> <span class="token function">get</span><span class="token punctuation">(</span>incomingPatient<span class="token punctuation">,</span> <span class="token string">"00100020.Value.0"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">set</span><span class="token punctuation">(</span>incomingPatient<span class="token punctuation">,</span> <span class="token string">"patientID"</span><span class="token punctuation">,</span> patientID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> patient <span class="token operator">=</span> <span class="token keyword">await</span> PatientModel<span class="token punctuation">.</span><span class="token function">createOrUpdatePatient</span><span class="token punctuation">(</span>
+      patientID<span class="token punctuation">,</span>
+      incomingPatient
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> patient<span class="token punctuation">.</span><span class="token function">toGeneralDicomJson</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+module<span class="token punctuation">.</span>exports<span class="token punctuation">.</span>CreatePatientService <span class="token operator">=</span> CreatePatientService<span class="token punctuation">;</span></span></span></span></code></pre><h2 id="https://www.notion.so/e0ceaa49eb7e4360b731b97235086217" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/e0ceaa49eb7e4360b731b97235086217"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Repository</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/d4b0fdcae5854bb6ab9eac5a00ef62f5" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">在 mongoose 的 statics 裡面加入 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">createOrUpdatePatient</code></span><span class="SemanticString"> function</span></span></li></ul><pre id="https://www.notion.so/ee278d5c028c4d209aa4d09231b007f2" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token operator">...</span>
+<span class="token punctuation">{</span>
+	<span class="token literal-property property">methods</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token function-variable function">toGeneralDicomJson</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">let</span> obj <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>_id<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>patientID<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>studyPaths<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>deleteStatus<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>createdAt<span class="token punctuation">;</span>
+                <span class="token keyword">delete</span> obj<span class="token punctuation">.</span>updatedAt<span class="token punctuation">;</span>
+
+                <span class="token keyword">return</span> obj<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token literal-property property">statics</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token comment">/**
+     * 
+     * @param {string} patientID 
+     * @param {any} patient patient general dicom json
+     */</span>
+    <span class="token function-variable function">createOrUpdatePatient</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">patientID<span class="token punctuation">,</span> patient</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">await</span> mongoose<span class="token punctuation">.</span><span class="token function">model</span><span class="token punctuation">(</span><span class="token string">"patient"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findOneAndUpdate</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            patientID
+        <span class="token punctuation">}</span><span class="token punctuation">,</span> patient<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">upsert</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token keyword">new</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token operator">...</span></span></span></span></code></pre><h1 id="https://www.notion.so/a9caabeb12c24d1b8474ff6501a62583" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/a9caabeb12c24d1b8474ff6501a62583"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">如何抽換成 SQL?</span></span></h1><div id="https://www.notion.so/44caf05b2c66471da08f02cfb48803d4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">當我們真正抽換資料庫換成 SQL 時，其實我們應該需要更改 require 的路徑，不過 Raccoon 在後面有使用 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.npmjs.com/package/better-module-alias">module-alias</a></span><span class="SemanticString"> 這款好工具，直接去設定檔改一下，create patietn 程式碼當中的 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">const { PatientModel } = require(&quot;@dbModels/patient.model&quot;);</code></span><span class="SemanticString"> 就可以引入不同資料庫實作的檔案囉！！</span></span></p></div><h1 id="https://www.notion.so/be22db9d4a10430096ba01c1a6ffc8c8" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/be22db9d4a10430096ba01c1a6ffc8c8"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參考資料</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/0204c6a3a8c84030acc74365b10c000a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.npmjs.com/package/module-alias">module-alias</a></span></span></li><li id="https://www.notion.so/edb152becfad4aa09cdd94b4822b68a5" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://kejyun.github.io/Laravel-5-Learning-Notes-Books/structure/structure-service-repository-structure-principle.html"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">Service &amp; Repository 架構設計準則（2017 年版本）</strong></a></span></span></li></ul></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2024</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>
