@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
   <loc>https://chinlinlee.github.io</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08T21:56:46+08:00</lastmod>
   <priority>1.0</priority>
 </url>
 <url>
@@ -13,6 +13,11 @@
 <url>
   <loc>https://chinlinlee.github.io/Xahda8.html</loc>
   <lastmod>2022-03-07</lastmod>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://chinlinlee.github.io/restart-ntunhs-course-query-system-day-1-web-crawler.html</loc>
+  <lastmod>2024-02-08</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
@@ -52,7 +57,7 @@
 </url>
 <url>
   <loc>https://chinlinlee.github.io/index.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08T21:56:45+08:00</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
@@ -62,7 +67,7 @@
 </url>
 <url>
   <loc>https://chinlinlee.github.io/google92fa8a17f64c4c23.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08T21:56:46+08:00</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
@@ -102,12 +107,12 @@
 </url>
 <url>
   <loc>https://chinlinlee.github.io/about.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08T21:56:46+08:00</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
   <loc>https://chinlinlee.github.io/tag/Web.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
@@ -127,7 +132,7 @@
 </url>
 <url>
   <loc>https://chinlinlee.github.io/tag/Node.JS.html</loc>
-  <lastmod>2024-01-18</lastmod>
+  <lastmod>2024-02-08</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
@@ -137,12 +142,12 @@
 </url>
 <url>
   <loc>https://chinlinlee.github.io/tag/JS.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
   <loc>https://chinlinlee.github.io/tag/JAVA.html</loc>
-  <lastmod>2024-02-07T12:48:06+08:00</lastmod>
+  <lastmod>2024-02-08T21:56:46+08:00</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
