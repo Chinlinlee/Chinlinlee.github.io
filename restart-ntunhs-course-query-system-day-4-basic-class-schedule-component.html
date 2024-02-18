@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>重啟北護課程查詢系統 Day 4 - 基礎課表元件&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="重啟北護課程查詢系統 Day 4 - 基礎課表元件">
+  
+    <meta name="description" content="北護課程查詢系統能復活嗎? Day 4 課表元件">
+    <meta property="og:description" content="北護課程查詢系統能復活嗎? Day 4 課表元件">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">重啟北護課程查詢系統 Day 4 - 基礎課表元件</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sun, Feb 18, 2024</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Node.JS.html">Node.JS</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Web.html">Web</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/JS.html">JS</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/7c0dcd8f7811492c95a154e8d2e717aa" class="PageRoot"><div id="https://www.notion.so/67f7ba6c6be749688de538996ca04019" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">今天要來實作前端基礎課表的元件，以供後續預排課表的功能使用~~</span></span></p></div><h1 id="https://www.notion.so/e1ab0a1524ac468298030d534699bbf2" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/e1ab0a1524ac468298030d534699bbf2"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課表樣式來源</span></span></h1><div id="https://www.notion.so/21b95053e57d4b49b78cf36aab4a665f" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">因為作者對前端實在不太熟，沒辦法直接把版面刻出來，好在現在元件發展很發達，而且網頁前端的樣式開個 F12 就可以偷了哈哈</span></span></p></div><div id="https://www.notion.so/174eabf0a5f04efe90fa78a8b41a00db" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2F16ca81f9-48f1-493d-aee3-21a3bdfc6bcd%2FUntitled.png?width=819&amp;table=block&amp;id=174eabf0-a5f0-4efe-90fa-78a8b41a00db"><img src="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2F16ca81f9-48f1-493d-aee3-21a3bdfc6bcd%2FUntitled.png?width=819&amp;table=block&amp;id=174eabf0-a5f0-4efe-90fa-78a8b41a00db" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">meme</span></span></figcaption></figure></div><div id="https://www.notion.so/d460890ed04c44aca2fe708b91bae2bc" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">這邊參考的來源是 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://tailwindui.com/components/application-ui/data-display/calendars#component-89f285aeebb60ddecb7ec8b5e664d525">Tailwind UI 提供的 Weekly calendar</a></span></span></p></div><div id="https://www.notion.so/f865280073c745e9be2368a391370fd5" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2F7d685146-8bd7-473e-9886-fa25fe559759%2FUntitled.png?width=1302&amp;table=block&amp;id=f8652800-73c7-45e9-be23-68a391370fd5"><img src="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2F7d685146-8bd7-473e-9886-fa25fe559759%2FUntitled.png?width=1302&amp;table=block&amp;id=f8652800-73c7-45e9-be23-68a391370fd5" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">Tailwind UI Components Weekly calendar</span></span></figcaption></figure></div><div id="https://www.notion.so/61ba4bbe6f0d479fbffa5c073365345e" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">不過當你開啟 F12 的時候你會發現，哭啊，class 竟然已經被 uglify 了，只好自己慢慢回溯旁邊的 styles 推測 Tailwind 的 class 了</span></span></p></div><div id="https://www.notion.so/67f59f095a6641c5b703c08aebc2f8b9" class="Image Image--PageWidth"><figure><a href="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2Fa1054379-2716-4d43-acee-11a83a01d93f%2FUntitled.png?width=1555&amp;table=block&amp;id=67f59f09-5a66-41c5-b703-c08aebc2f8b9"><img src="https://www.notion.so/signed/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fce9dcb2e-e8b2-4683-8073-5dc0d1a91890%2Fa1054379-2716-4d43-acee-11a83a01d93f%2FUntitled.png?width=1555&amp;table=block&amp;id=67f59f09-5a66-41c5-b703-c08aebc2f8b9" style="width:100%"/></a><figcaption><span class="SemanticStringArray"><span class="SemanticString">Tailwind UI Components Weekly calendar F12</span></span></figcaption></figure></div><h1 id="https://www.notion.so/3a14c6c20f9f47bca6698703311ff71b" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/3a14c6c20f9f47bca6698703311ff71b"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課表 Tailwind+AlpineJS+HTML Codepen</span></span></h1><div id="https://www.notion.so/b33752cdaebd46ae91adb3495b7b43d0" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下是最後推敲出來的課表，另外，筆者想要做到”自行更換顏色”的功能，但為了方便展示，所以 codepen 的示範程式碼沒有那麼完整</span></span></p></div><div id="https://www.notion.so/d58d54b6a1a94ffdb056f4c369caa603" class="Embed"><div class="Embed__Content"><div class="Embed__ResponsiveContainer" style="width:960px;height:560px"><iframe src="https://codepen.io/chinlinlee/embed/preview/QWooKjL?default-tabs=html%2Cresult&amp;height=300&amp;host=https%3A%2F%2Fcodepen.io&amp;slug-hash=QWooKjL" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" allowfullscreen=""></iframe></div></div></div><h1 id="https://www.notion.so/eb80f3dbdee74b2289a381f6552b4a6a" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/eb80f3dbdee74b2289a381f6552b4a6a"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">AlpineJS</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/2158410e5d0b4612aad658da13ad0b57" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">在之前的程式碼當中，我們並沒有使用到 AlpineJS，不過為了方便網頁上的元素 (e.g. 選單、Modal 等)，我們就來使用 AlpineJS 這個輕前端框架吧</span></span></li></ul><h2 id="https://www.notion.so/9f1213225b144531ac4032e101aa0324" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/9f1213225b144531ac4032e101aa0324"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">為專案加入 AlpineJS</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/eb1feff8374945b482bb1c655ad5ddad" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">安裝 AlpineJS 套件</span></span></li></ul><pre id="https://www.notion.so/8168f892b38e4b61920b79ef74cd2c63" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token function">pnpm</span> i alpinejs</span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/78ed654481f948e0b06549d85c91528f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">更改 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">client/bundle/main.js</code></span><span class="SemanticString"> 讓他 bundle AlpineJS 的程式碼</span></span></li></ul><pre id="https://www.notion.so/11ed4c8e88bd4cc9a2ab3dfd70276ca2" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> <span class="token string">"htmx.org"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> Alpine <span class="token keyword">from</span> <span class="token string">"alpinejs"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> NtunhsCourseHubFns <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"../bundle/course-hub.js"</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span>Alpine <span class="token operator">=</span> Alpine<span class="token punctuation">;</span>
+
+<span class="token comment">// Start Alpine when the page is ready.</span>
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"DOMContentLoaded"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    Alpine<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Restart Alpine when the DOM is altered by HTMX.</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"htmx:afterSwap"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    Alpine<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre><h1 id="https://www.notion.so/783498393f5c4b17a1d48a6ea777e86d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/783498393f5c4b17a1d48a6ea777e86d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課表元件</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/7a5341b8fe6f41cfbca81db139aec86a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">在第二章節</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.notion.so/7c0dcd8f7811492c95a154e8d2e717aa?pvs=25#3a14c6c20f9f47bca6698703311ff71b">課表 HTML</a></span><span class="SemanticString">只是純粹的 HTML，但在實際應用時，我們應該會把裡面的內容切成更細小的元件</span></span></li><li id="https://www.notion.so/36201c6b0f76468c92250b011b772877" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">元件一：課表</span></span></li><li id="https://www.notion.so/ccb98f80e95c44f2bb2fcdf445372fd8" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">元件二：課程 card</span></span></li><li id="https://www.notion.so/9a8d897332044c1584b2920ae5e81f37" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">元件三：課程 card 右上角的選單</span></span></li><li id="https://www.notion.so/9c5f7c24397b4e5f8c06ffa85e5dfd3b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">元件四：課程 card 選單的 Background 顏色方塊</span></span></li></ul><div id="https://www.notion.so/e3bd06d0860a4b889f491b36131e6e36" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">以下我們就以小到大把程式碼 po 上吧！</span></span></p></div><h2 id="https://www.notion.so/15e4c17a213e4559a4840abde1fc9010" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/15e4c17a213e4559a4840abde1fc9010"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課程 card 選單的 Background 顏色方塊</span></span></h2><h3 id="https://www.notion.so/946df39fd0424970b3fbd04ad14386a3" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/946df39fd0424970b3fbd04ad14386a3"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">bg-cube.ejs</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/e6a74c7e88724db193c04922264d4c0a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">參數</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/0036bff09cd745698fa99af1ac11d37c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">color: 方塊的顏色</span></span></li></ul></li></ul><pre id="https://www.notion.so/27363ae3137e411abb755bef83db3b15" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token operator">&lt;</span>div
+    <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"bg-&lt;%= color %>-50 justify-center items-center w-5 h-5 text-center cursor-pointer rounded text-inherit fill-inherit"</span>
+    <span class="token operator">:</span><span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"color==='&lt;%= color %>' ? 'border border-black' : ''"</span>
+    @click<span class="token operator">=</span><span class="token string">"changeColor('&lt;%= color %>')"</span>
+    style<span class="token operator">=</span><span class="token string">"box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset"</span>
+<span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span></span></span></span></code></pre><h2 id="https://www.notion.so/1916ae48ce434e55a80437b497387b00" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/1916ae48ce434e55a80437b497387b00"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課程 card 右上角的選單</span></span></h2><h3 id="https://www.notion.so/6a8bc182e3fb4a5997badb7b97789c13" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/6a8bc182e3fb4a5997badb7b97789c13"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">menu.ejs</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/dfc8d991bf244765b25b942d39371dac" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">參數:</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/a0f8294559ae4f5790210a43a23596cb" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">uid: 當下課程 card 的選單唯一 id，用於 querySelector</span></span></li></ul></li><li id="https://www.notion.so/6ce71de30ae147088c90c49ec22c2873" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">最上面的 x-data 是取得 menu 相關的 data 以及 functions，回傳內容可以參考 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.notion.so/7c0dcd8f7811492c95a154e8d2e717aa?pvs=25#19f15f0677734e36882dcec7c0918517">client/bundle/main.js</a></span></span></li><li id="https://www.notion.so/6398e9ab44e34041b265c57c047935b4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">裡面有個多層的 dropdown menu 只是暫存用的，也許以後會用到</span></span></li></ul><pre id="https://www.notion.so/7b19d850af5146378e9c378312617904" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"flex"</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>div x<span class="token operator">-</span>data<span class="token operator">=</span><span class="token string">"getCourseCardMenuData('&lt;%= uid %>')"</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span>button
+            <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"text-sm py-1 border-0 rounded-md outline-none bg-transparent"</span>
+            <span class="token operator">:</span><span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"NtunhsCourseHubFns.getColorByName(color).bg.hoverColor"</span>
+            x<span class="token operator">-</span>on<span class="token operator">:</span>click<span class="token operator">=</span><span class="token string">"show = !show"</span>
+        <span class="token operator">></span>
+            <span class="token operator">&lt;</span>svg
+                <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"w-5 h-5 fill-gray-600"</span>
+                aria<span class="token operator">-</span>hidden<span class="token operator">=</span><span class="token string">"true"</span>
+                xmlns<span class="token operator">=</span><span class="token string">"http://www.w3.org/2000/svg"</span>
+                fill<span class="token operator">=</span><span class="token string">"currentColor"</span>
+                viewBox<span class="token operator">=</span><span class="token string">"0 0 4 15"</span>
+            <span class="token operator">></span>
+                <span class="token operator">&lt;</span>path
+                    d<span class="token operator">=</span><span class="token string">"M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"</span>
+                <span class="token operator">/</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span><span class="token operator">/</span>svg<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">></span>
+        <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"relative h-screen"</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span>div
+                <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"bg-white rounded-md p-3 min-w-[220px] top-1 w-full absolute z-10 shadow-md"</span>
+                x<span class="token operator">-</span>show<span class="token operator">=</span><span class="token string">"show"</span>
+                x<span class="token operator">-</span>cloak
+                @click<span class="token punctuation">.</span>away<span class="token operator">=</span><span class="token string">"show = false"</span>
+                x<span class="token operator">-</span>transition<span class="token operator">:</span>enter<span class="token operator">=</span><span class="token string">"transition ease-out duration-100"</span>
+                x<span class="token operator">-</span>transition<span class="token operator">:</span>enter<span class="token operator">-</span>start<span class="token operator">=</span><span class="token string">"transform opacity-0 scale-95"</span>
+            <span class="token operator">></span>
+                <span class="token operator">&lt;</span>ul
+                    <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"[&amp;>li]:text-black [&amp;>li]:text-sm [&amp;>li]:cursor-pointer [&amp;>li]:px-2 [&amp;>li]:py-1 [&amp;>li]:rounded-md [&amp;>li]:transition-all hover:[&amp;>li]:bg-gray-600 hover:[&amp;>li]:bg-opacity-5 active:[&amp;>li]:bg-gray-700 active:[&amp;>li]:bg-opacity-5 active:[&amp;>li]:scale-[0.99]"</span>
+                <span class="token operator">></span>
+                    <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"flex flex-row flex-wrap"</span><span class="token operator">></span>
+                        <span class="token operator">&lt;</span>span <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"text-xs w-full text-gray-500 mb-2"</span>
+                            <span class="token operator">></span>Background<span class="token operator">&lt;</span><span class="token operator">/</span>span
+                        <span class="token operator">></span>
+                        <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"grid grid-cols-4 gap-4 mb-2"</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'gray'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'orange'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'yellow'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'green'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'blue'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'purple'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'pink'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                            <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">'bg-cube'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">'red'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+                        <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+                    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"w-full border border-gray-100 my-1"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>li
+                        <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"flex items-center justify-between"</span>
+                        x<span class="token operator">-</span>on<span class="token operator">:</span>click<span class="token operator">=</span><span class="token string">"menu = !menu"</span>
+                        @click<span class="token punctuation">.</span>away<span class="token operator">=</span><span class="token string">"menu = false"</span>
+                    <span class="token operator">></span>
+                        Services
+                        <span class="token operator">&lt;</span>i <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"arrow"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>i<span class="token operator">></span>
+                    <span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>div
+                        <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"bg-white rounded-md max-w-[180px] w-full p-3 absolute -right-[185px] -bottom-4 [&amp;>li]:text-black [&amp;>li]:text-sm [&amp;>li]:cursor-pointer [&amp;>li]:px-2 [&amp;>li]:py-1 [&amp;>li]:rounded-md [&amp;>li]:transition-all hover:[&amp;>li]:bg-gray-600 hover:[&amp;>li]:bg-opacity-5 active:[&amp;>li]:bg-gray-700 active:[&amp;>li]:bg-opacity-5 active:[&amp;>li]:scale-[0.99] shadow-md"</span>
+                        x<span class="token operator">-</span>show<span class="token operator">=</span><span class="token string">"menu"</span>
+                        x<span class="token operator">-</span>transition<span class="token operator">:</span>enter<span class="token operator">=</span><span class="token string">"transition ease-out duration-100"</span>
+                        x<span class="token operator">-</span>transition<span class="token operator">:</span>enter<span class="token operator">-</span>start<span class="token operator">=</span><span class="token string">"transform opacity-0 scale-95"</span>
+                    <span class="token operator">></span>
+                        <span class="token operator">&lt;</span>li<span class="token operator">></span>List Item #<span class="token number">1</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                        <span class="token operator">&lt;</span>li<span class="token operator">></span>List Item #<span class="token number">2</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                        <span class="token operator">&lt;</span>li<span class="token operator">></span>List Item #<span class="token number">3</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"w-full border border-gray-100 my-1"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>li <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"!text-red-500"</span><span class="token operator">></span>Delete<span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                    <span class="token operator">&lt;</span>li x<span class="token operator">-</span>text<span class="token operator">=</span><span class="token string">"color"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+                <span class="token operator">&lt;</span><span class="token operator">/</span>ul<span class="token operator">></span>
+            <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+<span class="token operator">&lt;</span>style<span class="token operator">></span>
+    <span class="token punctuation">.</span>arrow <span class="token punctuation">{</span>
+        <span class="token literal-property property">border</span><span class="token operator">:</span> solid black<span class="token punctuation">;</span>
+        border<span class="token operator">-</span>width<span class="token operator">:</span> <span class="token number">0</span> 2px 2px <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token literal-property property">display</span><span class="token operator">:</span> inline<span class="token operator">-</span>block<span class="token punctuation">;</span>
+        <span class="token literal-property property">padding</span><span class="token operator">:</span> 3px<span class="token punctuation">;</span>
+        <span class="token literal-property property">transform</span><span class="token operator">:</span> <span class="token function">rotate</span><span class="token punctuation">(</span><span class="token operator">-</span>45deg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token operator">-</span>webkit<span class="token operator">-</span>transform<span class="token operator">:</span> <span class="token function">rotate</span><span class="token punctuation">(</span><span class="token operator">-</span>45deg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>style<span class="token operator">></span></span></span></span></code></pre><h2 id="https://www.notion.so/049fbb8049dd49fa9a30e88584154053" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/049fbb8049dd49fa9a30e88584154053"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課程 card</span></span></h2><h3 id="https://www.notion.so/e4a370b5549548ce95a90579717025e7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/e4a370b5549548ce95a90579717025e7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">calendar-course-card.ejs</span></span></h3><ul class="BulletedListWrapper"><li id="https://www.notion.so/cbcc1b4a69c9494cb6fc09a6fc505aa4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">參數</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/6e9cebee11ef4e398f5a3fc497f3b9dc" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">dayNum: 上課星期</span></span></li><li id="https://www.notion.so/6fc88075e3554931b6ec80adec0dd05a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">startPeriod: 開始節次</span></span></li><li id="https://www.notion.so/9d83aed5762543e5bf6f995f47480680" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">endPeriod: 結束節次</span></span></li><li id="https://www.notion.so/94c21931b3274f1e879096e71285efb0" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">courseName: 課程名稱</span></span></li></ul></li></ul><pre id="https://www.notion.so/792de58ee2204bad8ed94180d10efba9" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> dayNum<span class="token punctuation">,</span> start period<span class="token punctuation">,</span> end period <span class="token operator">--</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> periodStartTimeMapping <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"0810"</span><span class="token punctuation">,</span> <span class="token string">"0910"</span><span class="token punctuation">,</span> <span class="token string">"1010"</span><span class="token punctuation">,</span> <span class="token string">"1110"</span><span class="token punctuation">,</span> <span class="token string">"1240"</span><span class="token punctuation">,</span> <span class="token string">"1340"</span><span class="token punctuation">,</span> <span class="token string">"1440"</span><span class="token punctuation">,</span> <span class="token string">"1540"</span><span class="token punctuation">,</span> <span class="token string">"1640"</span><span class="token punctuation">,</span> <span class="token string">"1740"</span><span class="token punctuation">,</span> <span class="token string">"1835"</span><span class="token punctuation">,</span> <span class="token string">"1730"</span><span class="token punctuation">,</span> <span class="token string">"2025"</span><span class="token punctuation">,</span> <span class="token string">"2120"</span><span class="token punctuation">]</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> periodEndTimeMapping <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"0900"</span><span class="token punctuation">,</span> <span class="token string">"1000"</span><span class="token punctuation">,</span> <span class="token string">"1100"</span><span class="token punctuation">,</span> <span class="token string">"1200"</span><span class="token punctuation">,</span> <span class="token string">"1330"</span><span class="token punctuation">,</span> <span class="token string">"1430"</span><span class="token punctuation">,</span> <span class="token string">"1530"</span><span class="token punctuation">,</span> <span class="token string">"1630"</span><span class="token punctuation">,</span> <span class="token string">"1730"</span><span class="token punctuation">,</span> <span class="token string">"1830"</span><span class="token punctuation">,</span> <span class="token string">"1925"</span><span class="token punctuation">,</span> <span class="token string">"2020"</span><span class="token punctuation">,</span> <span class="token string">"2115"</span><span class="token punctuation">,</span> <span class="token string">"2210"</span><span class="token punctuation">]</span> <span class="token operator">%</span><span class="token operator">></span>
+
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> periodStartTime <span class="token operator">=</span> periodStartTimeMapping<span class="token punctuation">[</span>startPeriod<span class="token punctuation">]</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> periodEndTime <span class="token operator">=</span> periodEndTimeMapping<span class="token punctuation">[</span>endPeriod<span class="token punctuation">]</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> periodLength <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>endPeriod<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>startPeriod<span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> liCardClass <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">sm:col-start-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dayNum<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> flex mt-[1px] relative calendar-course-card-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>uid<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token operator">%</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">%</span> <span class="token keyword">const</span> rowStart <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">parseInt</span><span class="token punctuation">(</span>startPeriod<span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">6</span><span class="token operator">+</span><span class="token number">2</span> <span class="token operator">%</span><span class="token operator">></span>
+
+<span class="token operator">&lt;</span>li
+    <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"&lt;%= liCardClass %>"</span>
+    style<span class="token operator">=</span><span class="token string">"grid-row: &lt;%= rowStart %> / span &lt;%= periodLength * 12 %>"</span>
+<span class="token operator">></span>
+    <span class="token operator">&lt;</span>div <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"absolute top-1 right-1 z-50"</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">%</span><span class="token operator">-</span> <span class="token function">include</span><span class="token punctuation">(</span><span class="token string">"./course-card-menu/menu.ejs"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">courseCardUid</span><span class="token operator">:</span> uid <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">%</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+    <span class="token operator">&lt;</span>a
+        href<span class="token operator">=</span><span class="token string">"#"</span>
+        <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"leading-5 text-sm p-2 bg-pink-50 rounded-lg overflow-y-auto sm:flex flex-col absolute inset-1 hover:bg-pink-100 group"</span>
+    <span class="token operator">></span>
+        <span class="token operator">&lt;</span>p <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"font-bold order-1 text-pink-700"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">%=</span> courseName <span class="token operator">%</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+        <span class="token operator">&lt;</span>p <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"text-pink-400 group-hover:text-pink-600"</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span>span
+                <span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">%=</span> periodStartTime <span class="token operator">%</span><span class="token operator">></span>
+                <span class="token operator">-</span>
+                <span class="token operator">&lt;</span><span class="token operator">%=</span> periodEndTime <span class="token operator">%</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>span
+            <span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>a<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span></span></span></span></code></pre><h2 id="https://www.notion.so/f470d11c1e9441a79596e752498c2924" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/f470d11c1e9441a79596e752498c2924"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">課表</span></span></h2><h3 id="https://www.notion.so/6d15ead08e3840c39dd14c70ae43ba3d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--3"><a class="Anchor" href="#https://www.notion.so/6d15ead08e3840c39dd14c70ae43ba3d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">weekly-calendar.js</span></span></h3><pre id="https://www.notion.so/e44041e3410b4519bc2b7802567965fd" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>main</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>overflow-auto flex flex-col isolate bg-white<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>md:max-w-full sm:max-w-none flex flex-none flex-col max-w-full<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pr-2 ring-opacity-5 ring-black ring-0 shadow bg-white flex-none top-0 sticky z-30<span class="token punctuation">"</span></span>
+        <span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid grid-cols-7 sm:hidden text-gray-500 leading-6 text-sm weekly-calendar-mobile-days<span class="token punctuation">"</span></span>
+            <span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>一<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>二<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>三<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>四<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>五<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>六<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pt-2 pb-3 items-center flex-col flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>日<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mr-[-1px] hidden grid-cols-7 divide-x border-gray-100 border-r-[1px] sm:grid text-gray-500 leading-6 weekly-calendar-days<span class="token punctuation">"</span></span>
+            <span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>w-14 col-end-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>一<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>二<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>三<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>四<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>五<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>六<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>divide-x border-gray-100 py-3 justify-center items-center flex<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">></span></span>日<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-auto flex<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ring-gray-100 ring-1 bg-white flex-none w-14 z-10 left-0 sticky<span class="token punctuation">"</span></span>
+            <span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid grid-cols-1 grid-rows-1 flex-auto<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grid grid-rows-[repeat(28,_minmax(3.5rem,_1fr))] row-start-1 col-start-1 col-end-2 weekly-calendar-rows-divide<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h-7 row-end-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            1
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            2
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            3
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            4
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            5
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            6
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            7
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            8
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            9
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            10
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            11
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            12
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            13
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leading-5 text-xs text-right pr-2 w-14 mt-[-0.625rem] ml-[-3.5rem] z-20 left-0 sticky text-gray-400<span class="token punctuation">"</span></span>
+                        <span class="token punctuation">></span></span>
+                            14
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sm:grid sm:grid-cols-7 grid-rows-1 grid-cols-7 col-start-1 col-end-2 row-start-1 hidden weekly-calendar-cols-divide<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-2<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-3<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-4<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-5<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-6<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>row-span-full col-start-7<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ol</span>
+                    <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>weekly-courses grid-rows-[1.75rem_repeat(168,_minmax(0px,_1fr))_auto] sm:grid-cols-7 grid row-start-1 col-end-2 col-start-1<span class="token punctuation">"</span></span>
+                <span class="token punctuation">></span></span>
+                    &lt;% for( let index = 0; index &lt; courses.length; index++ ) { %>
+                        &lt;% let course = courses[index]; %>
+                        &lt;%- include('calendar-course-card', { 
+                                dayNum: course.dayNum,
+                                startPeriod: course.startPeriod,
+                                endPeriod: course.endPeriod, 
+                                courseName: course.courseName, 
+                                uid: course.courseCardUid
+                            }) 
+                        %>
+                    &lt;% } %>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ol</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>main</span><span class="token punctuation">></span></span></span></span></span></code></pre><h2 id="https://www.notion.so/19f15f0677734e36882dcec7c0918517" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/19f15f0677734e36882dcec7c0918517"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">client/bundle/main.js</span></span></h2><pre id="https://www.notion.so/f5bb6ddc3aa84c099955d65d6c778ee0" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> <span class="token string">"htmx.org"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> Alpine <span class="token keyword">from</span> <span class="token string">"alpinejs"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> NtunhsCourseHubFns <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"../bundle/course-hub.js"</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span>Alpine <span class="token operator">=</span> Alpine<span class="token punctuation">;</span>
+
+<span class="token comment">// Start Alpine when the page is ready.</span>
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"DOMContentLoaded"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    Alpine<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"alpine:init"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    Alpine<span class="token punctuation">.</span><span class="token function">data</span><span class="token punctuation">(</span><span class="token string">"getCourseCardMenuData"</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">courseCardUid</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> courseCard <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">.calendar-course-card-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>courseCardUid<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> courseCardItem <span class="token operator">=</span> courseCard<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">show</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">menu</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> 
+            <span class="token literal-property property">color</span><span class="token operator">:</span> NtunhsCourseHubFns<span class="token punctuation">.</span><span class="token function">getCourseCardColor</span><span class="token punctuation">(</span>courseCardUid<span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+            <span class="token function">changeColor</span><span class="token punctuation">(</span><span class="token parameter">colorName</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                NtunhsCourseHubFns<span class="token punctuation">.</span>persistent<span class="token punctuation">.</span><span class="token function">setCourseCardColor</span><span class="token punctuation">(</span>colorName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">let</span> oldColor <span class="token operator">=</span> NtunhsCourseHubFns<span class="token punctuation">.</span><span class="token function">getColorByName</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">let</span> targetColor <span class="token operator">=</span> NtunhsCourseHubFns<span class="token punctuation">.</span><span class="token function">getColorByName</span><span class="token punctuation">(</span>colorName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">changeCourseCardColor</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">,</span> targetColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>show <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>menu <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token function">changeCourseCardColor</span><span class="token punctuation">(</span><span class="token parameter">oldColor<span class="token punctuation">,</span> targetColor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                courseCardItem<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">.</span>bg<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                courseCardItem<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">.</span>bg<span class="token punctuation">.</span>hoverColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                courseCardItem<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>targetColor<span class="token punctuation">.</span>bg<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                courseCardItem<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>targetColor<span class="token punctuation">.</span>bg<span class="token punctuation">.</span>hoverColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>color <span class="token operator">=</span> window<span class="token punctuation">.</span>NtunhsCourseHubFns<span class="token punctuation">.</span><span class="token function">getCourseCardColor</span><span class="token punctuation">(</span>courseCardUid<span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">;</span>
+
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">changeCourseCardCourseNameColor</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">,</span> targetColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">changeCourseCardTimeColor</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">,</span> targetColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token function">changeCourseCardCourseNameColor</span><span class="token punctuation">(</span><span class="token parameter">oldColor<span class="token punctuation">,</span> targetColor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">let</span> courseNameElement <span class="token operator">=</span> courseCardItem<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"p:nth-child(1)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                courseNameElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">.</span>courseText<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                courseNameElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>targetColor<span class="token punctuation">.</span>courseText<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token function">changeCourseCardTimeColor</span><span class="token punctuation">(</span><span class="token parameter">oldColor<span class="token punctuation">,</span> targetColor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">let</span> timeElement <span class="token operator">=</span> courseCardItem<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"p:nth-child(2)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                timeElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">.</span>timeText<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                timeElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>oldColor<span class="token punctuation">.</span>timeText<span class="token punctuation">.</span>hoverColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                timeElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>targetColor<span class="token punctuation">.</span>timeText<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                timeElement<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>targetColor<span class="token punctuation">.</span>timeText<span class="token punctuation">.</span>hoverColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Restart Alpine when the DOM is altered by HTMX.</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"htmx:afterSwap"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    Alpine<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre><h2 id="https://www.notion.so/f5c4d009a1b94faab09c5a7e3b9cbc08" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/f5c4d009a1b94faab09c5a7e3b9cbc08"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">client/bundle/course-hub.js</span></span></h2><pre id="https://www.notion.so/5ad63fe5d23f42dd9b18dbe4994c3057" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">export</span> <span class="token keyword">const</span> colors <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"gray"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-gray-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-gray-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-gray-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-gray-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-gray-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"orange"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-orange-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-orange-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-orange-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-orange-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-orange-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"yellow"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-yellow-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-yellow-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-yellow-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-yellow-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-yellow-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"green"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-green-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-green-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-green-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-green-600"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-green-700"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"blue"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-blue-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-blue-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-blue-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-blue-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-blue-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"purple"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-purple-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-purple-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-purple-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-purple-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-purple-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"pink"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-pink-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-pink-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-pink-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-pink-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-pink-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"red"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">bg</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"bg-red-50"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"hover:bg-red-100"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">courseText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-red-700"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">timeText</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">color</span><span class="token operator">:</span> <span class="token string">"text-red-400"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">hoverColor</span><span class="token operator">:</span> <span class="token string">"group-hover:text-red-600"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> NtunhsCourseHubFns <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">persistent</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token comment">/**
+         * 
+         * @param { "gray" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink" } color 
+         */</span>
+        <span class="token function-variable function">setCourseCardColor</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+            window<span class="token punctuation">.</span>localStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">"ntunhs-course-hub-card-color"</span><span class="token punctuation">,</span> color<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">getCourseCardColor</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">courseCardUid</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> courseCard <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">.calendar-course-card-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>courseCardUid<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">let</span> courseCardItem <span class="token operator">=</span> courseCard<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> colors<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>courseCardItem<span class="token punctuation">.</span>classList<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>colors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>bg<span class="token punctuation">.</span>color<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> colors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">getColorByName</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">colorName</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> colors<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">c</span> <span class="token operator">=></span> c<span class="token punctuation">.</span>name <span class="token operator">===</span> colorName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"DOMContentLoaded"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    window<span class="token punctuation">.</span>NtunhsCourseHubFns <span class="token operator">=</span> NtunhsCourseHubFns<span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> cardColor <span class="token operator">=</span> window<span class="token punctuation">.</span>localStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">"ntunhs-course-hub-card-color"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cardColor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        cardColor <span class="token operator">=</span> <span class="token string">"green"</span><span class="token punctuation">;</span>
+        window<span class="token punctuation">.</span>localStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">"ntunhs-course-hub-card-color"</span><span class="token punctuation">,</span> cardColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre><h2 id="https://www.notion.so/11154b10b7094ed1a8417cb328d33d96" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/11154b10b7094ed1a8417cb328d33d96"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/modules/weekly-calendar.js</span></span></h2><div id="https://www.notion.so/5bc946907480411982fb83f94c2f1f0b" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">因為我們是 sever side render，並且這邊只是要展示用，所以還是要更改 server 的 code</span></span></p></div><pre id="https://www.notion.so/6316ddbb9bf14e58aab12ed6418fa28a" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> <span class="token punctuation">{</span> uid <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"uid/secure"</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * 
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {import("fastify").FastifyPluginOptions} opts 
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/weekly-calendar"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token function-variable function">preHandler</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">&amp;&amp;</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> reply<span class="token punctuation">.</span><span class="token function">view</span><span class="token punctuation">(</span><span class="token string">"components/layout"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">page</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token literal-property property">file</span><span class="token operator">:</span> <span class="token string">"weekly-calendar.ejs"</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                    <span class="token literal-property property">courses</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token punctuation">{</span>
+                            <span class="token literal-property property">dayNum</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+                            <span class="token literal-property property">startPeriod</span><span class="token operator">:</span> <span class="token string">"5"</span><span class="token punctuation">,</span>
+                            <span class="token literal-property property">endPeriod</span><span class="token operator">:</span> <span class="token string">"7"</span><span class="token punctuation">,</span>
+                            <span class="token literal-property property">courseName</span><span class="token operator">:</span> <span class="token string">"休閒與生活"</span><span class="token punctuation">,</span>
+                            <span class="token literal-property property">courseCardUid</span><span class="token operator">:</span> <span class="token function">uid</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">]</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    fastify<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/context-menu"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> reply<span class="token punctuation">.</span><span class="token function">view</span><span class="token punctuation">(</span><span class="token string">"components/layout"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">page</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token literal-property property">file</span><span class="token operator">:</span> <span class="token string">"course-card-context-menu"</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h1 id="https://www.notion.so/751f5f4d3b504fc1bc12e233baa2ccee" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/751f5f4d3b504fc1bc12e233baa2ccee"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">Github</span></span></h1><div id="https://www.notion.so/fad5cfc4ce464af1a1d56857807babc4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://github.com/ntunhs-course-ecosystem/course-hub/tree/day4">https://github.com/ntunhs-course-ecosystem/course-hub/tree/day4</a></span></span></p></div><h1 id="https://www.notion.so/b1302ef2ef464ab9b322f6bb9638b195" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/b1302ef2ef464ab9b322f6bb9638b195"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參考資料</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/ce5cf7f9c58d48818e051e9e57756b99" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://codepen.io/umurkose/pen/oNPeBxR">https://codepen.io/umurkose/pen/oNPeBxR</a></span></span></li><li id="https://www.notion.so/614b81ff49594fd3aa81765893345d12" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://tailwindui.com/components/application-ui/data-display/calendars#component-89f285aeebb60ddecb7ec8b5e664d525">https://tailwindui.com/components/application-ui/data-display/calendars#component-89f285aeebb60ddecb7ec8b5e664d525</a></span></span></li></ul><div id="https://www.notion.so/33e8fe00c3674d3b86aa7e9e1c1f707c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2024</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>

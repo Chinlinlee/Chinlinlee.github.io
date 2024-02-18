@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Chrome, Firefox OS and Opera Status Bar Color -->
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+<link rel="stylesheet" type="text/css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.19.0/themes/prism.min.css">
+<link rel="stylesheet" type="text/css" href="css/SourceSansPro.css">
+<link rel="stylesheet" type="text/css" href="css/theme.css">
+<link rel="stylesheet" type="text/css" href="css/notablog.css">
+<!-- Favicon -->
+
+  <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;">
+
+<style>
+  :root {
+    font-size: 20px;
+  }
+</style>
+  <title>重啟北護課程查詢系統 Day 3 - HTMX 小試身手 - counter&nbsp;|&nbsp;ChinLin’s Blog</title>
+  <meta property="og:type" content="blog">
+  <meta property="og:title" content="重啟北護課程查詢系統 Day 3 - HTMX 小試身手 - counter">
+  
+    <meta name="description" content="北護課程查詢系統能復活嗎? Day 3 HTMX 小試身手">
+    <meta property="og:description" content="北護課程查詢系統能復活嗎? Day 3 HTMX 小試身手">
+  
+  
+  <style>
+    .DateTagBar {
+      margin-top: 1.0rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="Navbar">
+  <a href="index.html">
+    <div class="Navbar__Btn">
+      
+        <span><img class="inline-img-icon" src="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text text-anchor=%22middle%22 dominant-baseline=%22middle%22 x=%2250%22 y=%2255%22 font-size=%2280%22&gt;🐅&lt;/text&gt;&lt;/svg&gt;"></span>&nbsp;
+      
+      <span>Home</span>
+    </div>
+  </a>
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <span class="Navbar__Delim">&centerdot;</span>
+      <a href="about.html">
+        <div class="Navbar__Btn">
+          
+            <span><img class="inline-img-icon" src="https://www.notion.so/signed/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F2529def0-9031-44bd-94d3-e6da4b9e887c%2F%E5%86%A0%E8%B2%93%E6%80%9D%E8%80%83.png?table=block&amp;id=721d7aeb-cf52-4f6f-9a86-648e0e7bfcb1"></span>&nbsp;
+          
+          <span>關於我</span>
+        </div>
+      </a>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</nav>
+  <header class="Header">
+    
+    <div class="Header__Spacer Header__Spacer--NoCover">
+    </div>
+    
+    <h1 class="Header__Title">重啟北護課程查詢系統 Day 3 - HTMX 小試身手 - counter</h1>
+    
+      <div class="DateTagBar">
+        
+          <span class="DateTagBar__Item DateTagBar__Date">Posted on Sat, Feb 17, 2024</span>
+        
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Node.JS.html">Node.JS</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--green">
+            <a href="tag/Web.html">Web</a>
+          </span>
+        
+          <span class="DateTagBar__Item DateTagBar__Tag DateTagBar__Tag--yellow">
+            <a href="tag/JS.html">JS</a>
+          </span>
+        
+      </div>
+    
+  </header>
+  <article id="https://www.notion.so/618ac89bea52415ebe50119fd252a758" class="PageRoot"><div id="https://www.notion.so/11ef3ff2360246118fc0a33f23e3d0d8" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">在</span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://www.notion.so/95fa7d58b8f740feb204f632818cbab4?pvs=25">重啟北護課程查詢系統 Day 2 - Fastify-HTMX-EJS-Tailwind</a></span><span class="SemanticString">當中，筆者比較有興趣一點的是 HTMX，在 Day 3，我們就小小的玩一下，做一個 counter 吧！</span></span></p></div><h1 id="https://www.notion.so/d32709c59e714c8584cc3a9f1a09289d" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/d32709c59e714c8584cc3a9f1a09289d"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">安裝套件</span></span></h1><div id="https://www.notion.so/7245e3644c224799a323333cd5488be1" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">在實作 counter 時，我們要把 count 給儲存起來，並渲染給 user，在這我們可以使用 session 達成這項任務</span></span></p></div><ul class="BulletedListWrapper"><li id="https://www.notion.so/9ea870f05e4d4f86ab0d3d4f8912dda2" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">運行以下指令安裝 session 相關的套件</span></span></li></ul><pre id="https://www.notion.so/c5ffa2a24c1c4682b79049e29b90fb20" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span>pnpm i @fastify/session @fastify/cookie</span></span></span></code></pre><h1 id="https://www.notion.so/16e511828dde4a8b82b53ef56a39a4d7" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/16e511828dde4a8b82b53ef56a39a4d7"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">設定 session</span></span></h1><h2 id="https://www.notion.so/0b16f1a860b040b083d7c5ad9dc65216" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/0b16f1a860b040b083d7c5ad9dc65216"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">.env</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/4e3895c46851489dbde45a785dce985f" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">session 需要 secret 以確保資料的真實性和完整性，所以這邊必須要在 .env 新增 session 用的 secret</span></span></li></ul><pre id="https://www.notion.so/2e4920f3b14e4826be59cdd87ca05465" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token constant">SERVER_HOST</span><span class="token operator">=</span><span class="token string">"127.0.0.1"</span>
+<span class="token constant">SERVER_PORT</span><span class="token operator">=</span><span class="token number">3000</span>
+<span class="token constant">SESSION_SECRET</span><span class="token operator">=</span><span class="token string">"請自行產生超過32字元的 secret 數值"</span></span></span></span></code></pre><h2 id="https://www.notion.so/af934b0732254872a9b1de003f04e157" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/af934b0732254872a9b1de003f04e157"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">env-class.js</span></span></h2><pre id="https://www.notion.so/137b6eece1474fde930f40edc425f644" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">// 抓取 env 的設定</span>
+<span class="token comment">// 使用 env-var 來驗證以及針對數值轉換 env 的設定</span>
+
+<span class="token keyword">import</span> envVar <span class="token keyword">from</span> <span class="token string">"env-var"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> dotenv <span class="token keyword">from</span> <span class="token string">"dotenv"</span><span class="token punctuation">;</span>
+
+dotenv<span class="token punctuation">.</span><span class="token function">config</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">ServerEnv</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">host</span><span class="token operator">:</span> envVar<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"SERVER_HOST"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">default</span><span class="token punctuation">(</span><span class="token string">"0.0.0.0"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">port</span><span class="token operator">:</span> envVar<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"SERVER_PORT"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">default</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asPortNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">sessionSecret</span><span class="token operator">:</span> envVar<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"SESSION_SECRET"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">required</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">asString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></span></span></span></code></pre><h2 id="https://www.notion.so/6d2c620636ff419cac49aa8de3474e60" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/6d2c620636ff419cac49aa8de3474e60"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/plugins/session.js</span></span></h2><pre id="https://www.notion.so/38205f20ae774b01810c5fec506a1628" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> fp <span class="token keyword">from</span> <span class="token string">"fastify-plugin"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> fastifySession <span class="token keyword">from</span> <span class="token string">"@fastify/session"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> fastifyCookie <span class="token keyword">from</span> <span class="token string">"@fastify/cookie"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> ServerEnv <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"../env-class.js"</span><span class="token punctuation">;</span>
+
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">fp</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>fastifyCookie<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fastify<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>fastifySession<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">cookieName</span><span class="token operator">:</span> <span class="token string">"ntunhs-session-id"</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">secret</span><span class="token operator">:</span> <span class="token function">ServerEnv</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sessionSecret<span class="token punctuation">,</span>
+        <span class="token literal-property property">cookie</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">"/"</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">secure</span><span class="token operator">:</span> <span class="token boolean">false</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"f-session"</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></span></span></code></pre><h1 id="https://www.notion.so/0cef5298a488421b9d0196f0ba150b1b" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/0cef5298a488421b9d0196f0ba150b1b"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">建立 counter 頁面</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/e6a8f28a51954b20b2551cac22ed865e" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">此章節主要在建立 counter 的 ejs 頁面</span></span></li></ul><h2 id="https://www.notion.so/61ee2fc8102148e58d1f8044efcc0589" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/61ee2fc8102148e58d1f8044efcc0589"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/views/counter.ejs</span></span></h2><pre id="https://www.notion.so/edbfaf848bc94367a294864962506e43" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>main</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>container<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>main<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex flex-wrap flex-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text-3xl block w-full<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>counter!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>block w-full mb-5<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>p-count<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>count: &lt;%= count %><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span>
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-post</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/counter/increment<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-select</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#p-count<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#p-count<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-swap</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>outerHTML<span class="token punctuation">"</span></span>
+        <span class="token punctuation">></span></span>
+            Increment
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span>
+            <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span>
+            <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-post</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/counter/increment-p<span class="token punctuation">"</span></span>
+            <span class="token attr-name">hx-target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#p-count<span class="token punctuation">"</span></span>
+        <span class="token punctuation">></span></span>
+            Increment - only paragraph
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>main</span><span class="token punctuation">></span></span></span></span></span></code></pre><ul class="BulletedListWrapper"><li id="https://www.notion.so/69e748842c3543958f927afd6b518db4" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">button 所使用的樣式是從 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://flowbite.com/docs/components/buttons/">flowbite</a></span><span class="SemanticString"> 的 Button pills 內的第四個 light 複製而來 </span></span></li><li id="https://www.notion.so/a4ff1c7788d84c8883f3b23206ff6c29" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hx-post</code></span><span class="SemanticString"> 代表會使用 POST 方法傳送資訊到賦予數值的 url</span></span></li><li id="https://www.notion.so/81dc7dde550d4aada3edc2829cc1cde5" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">第一個 increment</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/550ac2c8329d4aa783816165fc624016" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hx-select=”#p-count”</code></span><span class="SemanticString">的意思是只選擇 POST /counter/increment 回傳的整體 HTML 中id 為 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">p-count</code></span><span class="SemanticString"> 的元素並替換 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">#p-count</code></span></span></li><li id="https://www.notion.so/37eb71c137e34c9a9c1a8eacede13725" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hx-target</code></span><span class="SemanticString"> 則是透過 css selector 直接替換 HTML 裡面的內容</span></span></li></ul></li><li id="https://www.notion.so/6289e72c7da94a7f84ea80256f5cad91" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">第二個 increment</span></span><ul class="BulletedListWrapper"><li id="https://www.notion.so/11967944ae8148d1bb129c39b177f82a" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">/counter/increment-p</code></span><span class="SemanticString"> 則只回傳 text，可以直接替換到 p-count</span></span></li></ul></li></ul><h1 id="https://www.notion.so/3e28a5c0f4424365b10759684bb6fa60" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/3e28a5c0f4424365b10759684bb6fa60"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">routes</span></span></h1><h2 id="https://www.notion.so/830433d769cf4935a753caa0ec0571d8" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/830433d769cf4935a753caa0ec0571d8"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/modules/counter/index.js</span></span></h2><pre id="https://www.notion.so/700d02f30d7547c79fd69e0e58ed4aef" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token keyword">import</span> autoLoad <span class="token keyword">from</span> <span class="token string">"@fastify/autoload"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> join <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"desm"</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * 
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {import("fastify").FastifyPluginOptions} opts 
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>autoLoad<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">dir</span><span class="token operator">:</span> <span class="token function">join</span> <span class="token punctuation">(</span><span class="token keyword">import</span><span class="token punctuation">.</span>meta<span class="token punctuation">.</span>url<span class="token punctuation">,</span> <span class="token string">"routes"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">prefix</span><span class="token operator">:</span> opts<span class="token punctuation">.</span>prefix
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h2 id="https://www.notion.so/f4e9cf5b9ec6406697eb28f997817918" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/f4e9cf5b9ec6406697eb28f997817918"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/modules/counter/routes/counter.js</span></span></h2><pre id="https://www.notion.so/e75f5d9de6134bc4bac385e6e5008852" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/**
+ * 
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {import("fastify").FastifyPluginOptions} opts 
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token function-variable function">preHandler</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">&amp;&amp;</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count  <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> reply<span class="token punctuation">.</span><span class="token function">view</span><span class="token punctuation">(</span><span class="token string">"components/layout"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">page</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token literal-property property">file</span><span class="token operator">:</span> <span class="token string">"../counter.ejs"</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                    <span class="token literal-property property">count</span><span class="token operator">:</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h2 id="https://www.notion.so/26e2b08a1b93426ebcd1d95d6fe1a751" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/26e2b08a1b93426ebcd1d95d6fe1a751"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/modules/counter/routes/increment.js</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/a45638d1da5d4591b6b06574093f20d6" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">回傳整體 counter.ejs 的 HTML</span></span></li></ul><pre id="https://www.notion.so/65d45fb95f53484a93db6e4e04696872" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/**
+ * 
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {import("fastify").FastifyPluginOptions} opts 
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token string">"/increment"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token function-variable function">preHandler</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">&amp;&amp;</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> reply<span class="token punctuation">.</span><span class="token function">view</span><span class="token punctuation">(</span><span class="token string">"components/layout"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">page</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token literal-property property">file</span><span class="token operator">:</span> <span class="token string">"../counter.ejs"</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                    <span class="token literal-property property">count</span><span class="token operator">:</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h2 id="https://www.notion.so/0482c8094a944d019451260046f3ef50" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--2"><a class="Anchor" href="#https://www.notion.so/0482c8094a944d019451260046f3ef50"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">server/modules/counter/routes/increment-p.js</span></span></h2><ul class="BulletedListWrapper"><li id="https://www.notion.so/3d86f97c922f4cad9ff578af6586a7d7" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString">僅回傳 p 元素內的 text</span></span></li></ul><pre id="https://www.notion.so/f44cc21725874b6cb0b4d410afa452de" class="Code"><code><span class="SemanticStringArray"><span class="SemanticString"><span><span class="token comment">/**
+ * 
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {import("fastify").FastifyPluginOptions} opts 
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fastify<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    fastify<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token string">"/increment-p"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token function-variable function">preHandler</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">&amp;&amp;</span> request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">!==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">request<span class="token punctuation">,</span> reply</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> reply<span class="token punctuation">.</span><span class="token function">type</span><span class="token punctuation">(</span><span class="token string">"text/html"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">count: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span></span></span></code></pre><h1 id="https://www.notion.so/65f46088905544c4be978e4bdecb4098" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/65f46088905544c4be978e4bdecb4098"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">counter 最終成果</span></span></h1><div id="https://www.notion.so/c9d4ed297b9645d7add0d429c4f63383" class="Embed"><div class="Embed__Content"><div class="Embed__ResponsiveContainer" style="width:708px;height:320px"><iframe src="https://prod-files-secure.s3.us-west-2.amazonaws.com/ce9dcb2e-e8b2-4683-8073-5dc0d1a91890/1d899f69-3c65-42f3-8f5f-4a0e4849c020/2024-02-16_19-31-46.mp4" sandbox="allow-scripts allow-popups allow-forms allow-same-origin" allowfullscreen=""></iframe></div></div><p class="Embed__Caption"><span class="SemanticStringArray"></span></p></div><div id="https://www.notion.so/e9d80f0eb533432789579ddae949cab4" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div><h1 id="https://www.notion.so/cb9cf1de7ba445509ee9e2b28f038a14" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/cb9cf1de7ba445509ee9e2b28f038a14"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">結語</span></span></h1><div id="https://www.notion.so/5f699a99b4b140699bbde6ee90ba537c" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"><span class="SemanticString">今天玩了一點點的 HTMX 功能，去替換網頁中的元素，過程中作者對 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hx-trarget</code></span><span class="SemanticString"> 和 </span><span class="SemanticString"><code class="SemanticString__Fragment SemanticString__Fragment--Code">hx-select</code></span><span class="SemanticString"> 都有點小困惑，可以看看這部影片 </span><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://youtu.be/JhskwvJuXF4"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HTMX - hx-select and hx-select-oob Attributes in HTMX</strong></a></span><span class="SemanticString"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold"> </strong></span><span class="SemanticString">了解一下別人是怎麼使用 hx-target、hx-select 和 hx-select-oob</span></span></p></div><h1 id="https://www.notion.so/23d723961fe245eb8e3aae8a57f3a420" class="ColorfulBlock ColorfulBlock--ColorDefault Heading Heading--1"><a class="Anchor" href="#https://www.notion.so/23d723961fe245eb8e3aae8a57f3a420"><svg width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><span class="SemanticStringArray"><span class="SemanticString">參考資料</span></span></h1><ul class="BulletedListWrapper"><li id="https://www.notion.so/c578063d4aa84b2583e6fb2f106dd48b" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://flowbite.com/docs/components/buttons/#button-pills">https://flowbite.com/docs/components/buttons/#button-pills</a></span></span></li><li id="https://www.notion.so/5c8d18cb0fb64b9da25048717fe57cb1" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://htmx.org/docs">https://htmx.org/docs</a></span></span></li><li id="https://www.notion.so/ddd4a8f91f654fa4a54e462e5037205c" class="BulletedList"><span class="SemanticStringArray"><span class="SemanticString"><a class="SemanticString__Fragment SemanticString__Fragment--Link" href="https://youtu.be/JhskwvJuXF4"><strong class="SemanticString__Fragment SemanticString__Fragment--Bold">HTMX - hx-select and hx-select-oob Attributes in HTMX</strong></a></span></span></li></ul><div id="https://www.notion.so/03ac2def9e1c469b926fbf10e4cd62f5" class="ColorfulBlock ColorfulBlock--ColorDefault Text"><p class="Text__Content"><span class="SemanticStringArray"></span></p></div></article>
+<br />
+<script src="https://utteranc.es/client.js"
+  repo="Chinlinlee/Chinlinlee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+  <footer class="Footer">
+  <div>&copy; ChinLin’s Blog 2021-2024</div>
+  <div>&centerdot;</div>
+  <div>Powered by <a href="https://github.com/dragonman225/notablog" target="_blank"
+      rel="noopener noreferrer">Notablog</a>.
+  </div>
+</footer>
+</body>
+
+</html>
+<script src="./scripts/code-copy.js"></script>
+<script type="text/javascript" src="./scripts/table-of-contents-sidebar-lib/table-of-contents-sidebar.min.js"></script>
+<script type="text/javascript">
+    window.onload = function(e){
+        TableOfContents.init({
+            basePath: "./scripts/table-of-contents-sidebar-lib/",
+            querySelector: "body" // or other css querySelector
+        });
+    }
+</script>
